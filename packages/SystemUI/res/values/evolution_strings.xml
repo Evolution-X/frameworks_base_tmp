@@ -109,4 +109,7 @@
 
     <!-- Screenshot Tile -->
     <string name="screenshot_long_press">Long press - selected region</string>
+
+    <!-- Notification counter -->
+    <string name="status_bar_notification_info_overflow" translatable="false">\u221E</string>
 </resources>
