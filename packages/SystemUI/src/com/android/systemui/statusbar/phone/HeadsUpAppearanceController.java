@@ -37,6 +37,7 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.HeadsUpStatusBarView;
 import com.android.systemui.statusbar.StatusBarState;
+import com.android.systemui.statusbar.logo.LogoImage;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.SourceType;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -92,6 +93,8 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
     private final NotificationWakeUpCoordinator mWakeUpCoordinator;
 
     private final Optional<View> mOperatorNameViewOptional;
+
+    private final LogoImage mLeftLogo;
 
     @VisibleForTesting
     float mExpandedHeight;
@@ -153,6 +156,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
         mOperatorNameViewOptional = operatorNameViewOptional;
         mDarkIconDispatcher = darkIconDispatcher;
         mClockController = new ClockController(statusBarView.getContext(), statusBarView);
+        mLeftLogo = statusBarView.findViewById(R.id.statusbar_logo);
 
         mView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -277,7 +281,11 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
                     hide(clockView, View.INVISIBLE);
                 }
                 mOperatorNameViewOptional.ifPresent(view -> hide(view, View.INVISIBLE));
+                if (mLeftLogo.getVisibility() != View.GONE)
+                    mLeftLogo.setVisibility(View.INVISIBLE);
             } else {
+                if (mLeftLogo.getVisibility() != View.GONE)
+                    mLeftLogo.setVisibility(View.VISIBLE);
                 if (isClock) {
                     show(clockView);
                 }
