@@ -467,6 +467,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         super.onPause();
         mCommandQueue.removeCallback(this);
         mStatusBarStateController.removeCallback(this);
+        mClockController.removeTunable();
         if (!StatusBarSimpleFragment.isEnabled()) {
             mOngoingCallController.removeCallback(mOngoingCallListener);
         }
@@ -606,6 +607,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             updateNotificationIconAreaAndOngoingActivityChip(animate);
         }
 
+        if (mClockController.getClock() == null)
+            return;
+
         // The clock may have already been hidden, but we might want to shift its
         // visibility to GONE from INVISIBLE or vice versa
         if (newModel.getShowClock() != previousModel.getShowClock()
@@ -662,7 +666,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
                         && mHasSecondaryOngoingActivity;
 
         View clockView = mClockController.getClock();
-        boolean isRightClock = clockView.getId() == R.id.clock_right;
+        boolean isRightClock = clockView != null && clockView.getId() == R.id.clock_right;
         return new StatusBarVisibilityModel(
                 showClock || isRightClock,
                 externalModel.getShowNotificationIcons(),
@@ -840,6 +844,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
      */
     private int clockHiddenMode() {
         StatusBarSimpleFragment.assertInLegacyMode();
+        if (mClockController.getClock() == null)
+            return View.GONE;
+
         if (!mShadeExpansionStateManager.isClosed() && !mKeyguardStateController.isShowing()
                 && !mStatusBarStateController.isDozing()
                 && mClockController.getClock().shouldBeVisible()) {
@@ -903,6 +910,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
      */
     private void animateHide(final View v, boolean animate) {
         StatusBarSimpleFragment.assertInLegacyMode();
+        if (v == null)
+            return;
         animateHiddenState(v, View.INVISIBLE, animate);
     }
 
@@ -911,6 +920,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
      */
     private void animateShow(View v, boolean animate) {
         StatusBarSimpleFragment.assertInLegacyMode();
+        if (v == null)
+            return;
         v.animate().cancel();
         v.setVisibility(View.VISIBLE);
         if (!animate || !mAnimationsEnabled) {
