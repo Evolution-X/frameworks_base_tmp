@@ -1636,6 +1636,10 @@ public class ActivityManagerService extends IActivityManager.Stub
     volatile ActivityManagerInternal.VoiceInteractionManagerProvider
             mVoiceInteractionManagerProvider;
 
+    // Swipe to screenshot
+    final SwipeToScreenshotObserver mSwipeToScreenshotObserver;
+    private boolean mIsSwipeToScrenshotEnabled;
+
     final class UiHandler extends Handler {
         public UiHandler() {
             super(com.android.server.UiThread.get().getLooper(), null, true);
@@ -2412,6 +2416,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         mBroadcastQueue = injector.getBroadcastQueue(this);
         mBroadcastController = new BroadcastController(mContext, this, mBroadcastQueue);
         mComponentAliasResolver = new ComponentAliasResolver(this);
+        mSwipeToScreenshotObserver = null;
     }
 
     // Note: This method is invoked on the main thread but may need to attach various
@@ -2518,6 +2523,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         mPendingStartActivityUids = new PendingStartActivityUids();
         mTraceErrorLogger = new TraceErrorLogger();
         mComponentAliasResolver = new ComponentAliasResolver(this);
+        mSwipeToScreenshotObserver = new SwipeToScreenshotObserver(mHandler, mContext);
     }
 
     void setBroadcastQueueForTest(BroadcastQueue broadcastQueue) {
@@ -8895,6 +8901,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         }
         mAppErrors.loadAppsNotReportingCrashesFromConfig(res.getString(
                 com.android.internal.R.string.config_appsNotReportingCrashes));
+        mSwipeToScreenshotObserver.registerObserver();
     }
 
     /**
@@ -19084,5 +19091,38 @@ public class ActivityManagerService extends IActivityManager.Stub
     @NonNull
     Freezer getFreezer() {
         return mFreezer;
+    }
+
+    private class SwipeToScreenshotObserver extends ContentObserver {
+
+        private final Context mContext;
+
+        public SwipeToScreenshotObserver(Handler handler, Context context) {
+            super(handler);
+            mContext = context;
+        }
+
+        public void registerObserver() {
+            mContext.getContentResolver().registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.SWIPE_TO_SCREENSHOT),
+                    false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        private void update() {
+            mIsSwipeToScrenshotEnabled = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.SWIPE_TO_SCREENSHOT, 0, UserHandle.USER_CURRENT) == 1;
+        }
+
+        public void onChange(boolean selfChange) {
+            update();
+        }
+    }
+
+    @Override
+    public boolean isSwipeToScreenshotGestureActive() {
+        synchronized (this) {
+            return mIsSwipeToScrenshotEnabled && SystemProperties.getBoolean("sys.android.screenshot", false);
+        }
     }
 }
