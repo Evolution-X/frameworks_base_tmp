@@ -29,6 +29,7 @@ import android.media.session.PlaybackState;
 import android.provider.Settings;
 import android.service.notification.NotificationStats;
 import android.service.notification.StatusBarNotification;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.systemui.Dumpable;
@@ -67,6 +68,7 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
     private static final String ISLAND_NOTIFICATION_NOW_PLAYING =
             "system:" + Settings.System.ISLAND_NOTIFICATION_NOW_PLAYING;
 
+    private static final String NOWPLAYING_SERVICE = "com.google.android.as";
     private static final HashSet<Integer> PAUSED_MEDIA_STATES = new HashSet<>();
     private static final HashSet<Integer> CONNECTING_MEDIA_STATES = new HashSet<>();
     static {
@@ -97,6 +99,9 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
 
     private boolean mIslandEnabled;
     private boolean mIslandNowPlayingEnabled;
+
+    private String mNowPlayingNotificationKey;
+    private String mNowPlayingTrack;
 
     private final MediaController.Callback mMediaListener = new MediaController.Callback() {
         @Override
@@ -286,6 +291,10 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             clearCurrentMediaNotification();
             dispatchUpdateMediaMetaData();
         }
+        if (key.equals(mNowPlayingNotificationKey)) {
+            mNowPlayingNotificationKey = null;
+            dispatchUpdateMediaMetaData();
+        }
     }
 
     @Nullable
@@ -334,6 +343,18 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
         NotificationEntry mediaNotification = null;
         MediaController controller = null;
         for (NotificationEntry entry : allNotifications) {
+            if (entry.getSbn().getPackageName().toLowerCase().equals(NOWPLAYING_SERVICE)) {
+                mNowPlayingNotificationKey = entry.getSbn().getKey();
+                String notificationText = null;
+                final String title = entry.getSbn().getNotification()
+                        .extras.getString(Notification.EXTRA_TITLE);
+                if (!TextUtils.isEmpty(title)) {
+                    mNowPlayingTrack = title;
+                }
+                break;
+            }
+        }
+        for (NotificationEntry entry : allNotifications) {
             Notification notif = entry.getSbn().getNotification();
             if (notif.isMediaNotification()) {
                 final MediaSession.Token token =
@@ -375,6 +396,13 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
                         + mMediaNotificationKey);
             }
         }
+    }
+
+    public String getNowPlayingTrack() {
+        if (mNowPlayingNotificationKey == null) {
+            mNowPlayingTrack = null;
+        }
+        return mNowPlayingTrack;
     }
 
     public void clearCurrentMediaNotification() {
