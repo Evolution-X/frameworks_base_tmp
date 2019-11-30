@@ -516,33 +516,6 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 UserHandle.USER_ALL);
 
         mSystemSettings.registerContentObserverForUser(
-                LineageSettings.System.getUriFor(LineageSettings.System.STATUS_BAR_BATTERY_STYLE),
-                false,
-                new ContentObserver(mBgHandler) {
-                    @Override
-                    public void onChange(boolean selfChange, Collection<Uri> collection, int flags,
-                            int userId) {
-                        if (DEBUG) Log.d(TAG, "Overlay changed for user: " + userId);
-                        if (mUserTracker.getUserId() != userId) {
-                            return;
-                        }
-                        if (!mDeviceProvisionedController.isUserSetup(userId)) {
-                            Log.i(TAG, "Theme application deferred when setting changed.");
-                            mDeferredThemeEvaluation = true;
-                            return;
-                        }
-                        boolean isCircleBattery = LineageSettings.System.getIntForUser(
-                                mContext.getContentResolver(),
-                                LineageSettings.System.STATUS_BAR_BATTERY_STYLE,
-                                0, UserHandle.USER_CURRENT) == 1;
-                        if (isCircleBattery) {
-                            reevaluateSystemTheme(true /* forceReload */);
-                        }
-                    }
-                },
-                UserHandle.USER_ALL);
-                
-        mSystemSettings.registerContentObserverForUser(
                 Settings.System.getUriFor(Settings.System.QS_TILE_UI_STYLE),
                 false,
                 new ContentObserver(mBgHandler) {
