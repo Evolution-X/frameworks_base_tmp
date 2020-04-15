@@ -2405,7 +2405,7 @@ public class SettingsProvider extends ContentProvider {
                 return;
             }
         }
-        throw new SecurityException("Permission denial, must have one of: "
+        throw new SecurityException("Permission denial: " + resolveCallingPackage() + " must have one of: "
             + Arrays.toString(permissions));
     }
 
