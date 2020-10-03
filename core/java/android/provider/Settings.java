@@ -6692,6 +6692,12 @@ public final class Settings {
         public static final String BLOCK_WALLPAPER_DIMMING = "block_wallpaper_dimming";
 
         /**
+         * Force full screen for devices with cutout
+         * @hide
+         */
+        public static final String FORCE_FULLSCREEN_CUTOUT_APPS = "force_full_screen_cutout_apps";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *
