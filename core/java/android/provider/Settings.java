@@ -6557,6 +6557,22 @@ public final class Settings {
         public static final String STATUS_BAR_LOGO_STYLE = "status_bar_logo_style";
 
         /**
+         * Adaptive playback
+         * Automatically pause media when the volume is muted and
+         * will resume automatically when volume is restored.
+         *   0 = disabled
+         *   1 = enabled
+         * @hide
+         */
+        public static final String ADAPTIVE_PLAYBACK_ENABLED = "adaptive_playback_enabled";
+
+        /**
+         * Adaptive playback's timeout in ms
+         * @hide
+         */
+        public static final String ADAPTIVE_PLAYBACK_TIMEOUT = "adaptive_playback_timeout";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *
@@ -6689,6 +6705,9 @@ public final class Settings {
             PRIVATE_SETTINGS.add(SCREEN_FLASH_NOTIFICATION);
             PRIVATE_SETTINGS.add(SCREEN_FLASH_NOTIFICATION_COLOR);
             PRIVATE_SETTINGS.add(DEFAULT_DEVICE_FONT_SCALE);
+            // Evolution X additions
+            PRIVATE_SETTINGS.add(ADAPTIVE_PLAYBACK_ENABLED);
+            PRIVATE_SETTINGS.add(ADAPTIVE_PLAYBACK_TIMEOUT);
         }
 
         /**
