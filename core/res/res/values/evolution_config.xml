@@ -4,7 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
     <!-- Name of a font family to use as light font. For theming purpose. -->
     <string name="config_lightFontFamily" translatable="false">sans-serif-light</string>
 
@@ -34,4 +33,7 @@
 
     <!-- Whether to cancel fingerprint operation if not idle -->
     <bool name="config_fpCancelIfNotIdle">false</bool>
+
+    <!-- Whether Pixel props is enabled -->
+    <bool name="config_enablePixelProps">true</bool>
 </resources>

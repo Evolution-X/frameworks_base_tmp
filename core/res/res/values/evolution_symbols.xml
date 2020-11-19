@@ -4,7 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
     <!-- App error dialog -->
     <java-symbol type="id" name="aerr_copy" />
     <java-symbol type="string" name="url_copy_success" />
@@ -40,4 +39,7 @@
 
     <!-- Whether to cancel fingerprint operation if not idle -->
     <java-symbol type="bool" name="config_fpCancelIfNotIdle" />
+
+    <!-- Whether Pixel props is enabled -->
+    <java-symbol type="bool" name="config_enablePixelProps" />
 </resources>
