@@ -261,4 +261,10 @@
     <!-- Defines the value used by the device sysfs node
          to disable DC dimming -->
     <string name="config_deviceDcDimmingDisableValue">0</string>
+
+    <!-- Whether device has a physical display cutout -->
+    <bool name="config_physicalDisplayCutout">false</bool>
+
+    <!-- Whether device has a centered display cutout -->
+    <bool name="config_physicalDisplayCutoutCentered">@bool/config_physicalDisplayCutout</bool>
 </resources>
