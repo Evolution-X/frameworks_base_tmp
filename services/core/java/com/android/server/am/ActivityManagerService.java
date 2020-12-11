@@ -5209,7 +5209,7 @@ public class ActivityManagerService extends IActivityManager.Stub
     }
 
     private void showConsoleNotificationIfActive() {
-        if (!SystemProperties.get("init.svc.console").equals("running")) {
+        if (!SystemProperties.get("init.svc.console").equals("running") || true) {
             return;
         }
         String title = mContext
