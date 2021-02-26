@@ -164,6 +164,7 @@ import com.android.server.credentials.CredentialManagerService;
 import com.android.server.criticalevents.CriticalEventLog;
 import com.android.server.devicepolicy.DevicePolicyManagerService;
 import com.android.server.devicestate.DeviceStateManagerService;
+import com.android.server.display.AutoAODService;
 import com.android.server.display.DisplayManagerService;
 import com.android.server.display.color.ColorDisplayService;
 import com.android.server.dreams.DreamManagerService;
@@ -1753,6 +1754,12 @@ public final class SystemServer implements Dumpable {
             if (AppFunctionManagerConfiguration.isSupported(context)) {
                 t.traceBegin("StartAppFunctionManager");
                 mSystemServiceManager.startService(AppFunctionManagerService.class);
+                t.traceEnd();
+            }
+
+            if (context.getResources().getBoolean(R.bool.config_dozeAlwaysOnDisplayAvailable)) {
+                t.traceBegin("AutoAODService");
+                mSystemServiceManager.startService(AutoAODService.class);
                 t.traceEnd();
             }
         } catch (Throwable e) {
