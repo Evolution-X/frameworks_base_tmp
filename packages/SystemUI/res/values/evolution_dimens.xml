@@ -42,4 +42,10 @@
 
     <!-- QS A11 Style -->
     <dimen name="custom_qs_panel_padding_top">0dp</dimen>
+
+    <!-- Height of the landscape battery icon in the status bar. -->
+    <dimen name="status_bar_battery_icon_height_landscape">10.5dp</dimen>
+
+    <!-- Width of the landscape battery icon in the status bar. -->
+    <dimen name="status_bar_battery_icon_width_landscape">20dp</dimen>
 </resources>
