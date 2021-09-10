@@ -108,4 +108,9 @@
     <!-- Statusbar Icons -->
     <string name="status_bar_data_saver">Data saver</string>
     <string name="status_bar_call_strength">Call strength</string>
+
+    <!-- Data usage info in QS footer -->
+    <string name="usage_data">used today</string>
+    <string name="usage_data_default_suffix">Data</string>
+    <string name="usage_wifi_default_suffix">Wi-Fi</string>
 </resources>
