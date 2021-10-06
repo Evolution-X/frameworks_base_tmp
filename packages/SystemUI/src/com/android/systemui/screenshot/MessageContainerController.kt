@@ -123,6 +123,6 @@ constructor(
     }
 
     companion object {
-        const val MESSAGE_EXPANSION_DURATION_MS: Long = 400
+        const val MESSAGE_EXPANSION_DURATION_MS: Long = 300
     }
 }
