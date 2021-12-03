@@ -93,6 +93,8 @@ class ShadeViewControllerEmptyImpl @Inject constructor() :
 
     override fun getScrollerLayoutController(): NotificationStackScrollLayoutController? = null
     override fun getKeyguardBottomAreaView(): KeyguardBottomAreaView? = null
+
+    override fun setBlockedGesturalNavigation(blocked: Boolean) {}
 }
 
 class ShadeHeadsUpTrackerEmptyImpl : ShadeHeadsUpTracker {
