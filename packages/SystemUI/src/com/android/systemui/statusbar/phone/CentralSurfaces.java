@@ -48,6 +48,7 @@ import com.android.systemui.qs.QSPanelController;
 import com.android.systemui.shade.NotificationShadeWindowView;
 import com.android.systemui.shade.ShadeViewController;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.policy.GameSpaceManager;
 import com.android.systemui.util.Compile;
 
 import java.io.PrintWriter;
@@ -361,4 +362,6 @@ public interface CentralSurfaces extends Dumpable, LifecycleOwner {
     void updateDismissAllButton();
 
     void setBlockedGesturalNavigation(boolean blocked);
+
+    GameSpaceManager getGameSpaceManager();
 }
