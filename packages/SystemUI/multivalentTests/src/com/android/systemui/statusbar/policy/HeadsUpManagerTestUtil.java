@@ -56,7 +56,8 @@ public class HeadsUpManagerTestUtil {
                 n,
                 new UserHandle(ActivityManager.getCurrentUser()),
                 null /* overrideGroupKey */,
-                0 /* postTime */);
+                0 /* postTime */,
+                false /* isContentSecure */);
     }
 
     protected static NotificationEntry createEntry(int id, Notification n) {
