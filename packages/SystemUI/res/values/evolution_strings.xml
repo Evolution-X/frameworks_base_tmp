@@ -144,4 +144,7 @@
 
     <!-- Toast for timer chips long press -->
     <string name="chip_longpress_hint">Long press to directly stop</string>
+
+    <!-- Label for UI element which allows to use lens on screenshot [CHAR LIMIT=30] -->
+    <string name="screenshot_lens_label">Lens</string>
 </resources>
