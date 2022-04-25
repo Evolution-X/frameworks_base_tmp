@@ -12975,7 +12975,7 @@ public class TelephonyManager {
         }
 
         public @ModemActivityInfoError int getErrorCode() {
-            return mErrorCode;
+            return 0;
         }
 
         @Override
