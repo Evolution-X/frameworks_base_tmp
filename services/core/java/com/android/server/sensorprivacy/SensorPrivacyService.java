@@ -48,6 +48,7 @@ import static android.hardware.SensorPrivacyManager.Sources.SHELL;
 import static android.hardware.SensorPrivacyManager.StateTypes.DISABLED;
 import static android.hardware.SensorPrivacyManager.StateTypes.ENABLED;
 import static android.hardware.SensorPrivacyManager.StateTypes.ENABLED_EXCEPT_ALLOWLISTED_APPS;
+import static android.os.UserHandle.USER_SYSTEM;
 import static android.hardware.SensorPrivacyManager.TOGGLE_TYPE_HARDWARE;
 import static android.hardware.SensorPrivacyManager.TOGGLE_TYPE_SOFTWARE;
 import static android.os.UserHandle.USER_NULL;
@@ -1239,8 +1240,11 @@ public final class SensorPrivacyService extends SystemService {
                 // b/221782106, possible race condition with role grant might bootloop device.
                 return;
             }
+            PackageManagerInternal pm = LocalServices.getService(PackageManagerInternal.class);
             if (mContext.checkCallingOrSelfPermission(
-                    android.Manifest.permission.OBSERVE_SENSOR_PRIVACY) == PERMISSION_GRANTED) {
+                    android.Manifest.permission.OBSERVE_SENSOR_PRIVACY) == PERMISSION_GRANTED ||
+                    Binder.getCallingUid() == pm.getPackageUid(pm.getSystemUiServiceComponent().
+                    getPackageName(), MATCH_SYSTEM_ONLY, USER_SYSTEM)) {
                 return;
             }
 
