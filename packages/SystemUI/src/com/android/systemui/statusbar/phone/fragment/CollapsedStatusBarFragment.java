@@ -19,6 +19,7 @@ import static com.android.systemui.statusbar.phone.fragment.StatusBarVisibilityM
 import android.annotation.Nullable;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.Trace;
@@ -39,6 +40,7 @@ import androidx.core.animation.Animator;
 import com.android.app.animation.Interpolators;
 import com.android.app.animation.InterpolatorsAndroidX;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Flags;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -61,6 +63,7 @@ import com.android.systemui.statusbar.events.SystemStatusAnimationCallback;
 import com.android.systemui.statusbar.events.SystemStatusAnimationScheduler;
 import com.android.systemui.statusbar.notification.icon.ui.viewbinder.NotificationIconContainerStatusBarViewBinder;
 import com.android.systemui.statusbar.phone.ClockController;
+import com.android.systemui.statusbar.phone.LyricViewController;
 import com.android.systemui.statusbar.phone.NotificationIconContainer;
 import com.android.systemui.statusbar.phone.PhoneStatusBarView;
 import com.android.systemui.statusbar.phone.PhoneStatusBarViewController;
@@ -168,6 +171,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private ClockController mClockController;
     private PhoneStatusBarViewController mStatusBarViewController;
     private boolean mShowSBClockBg;
+
+    private LyricController mLyricController;
 
     private List<String> mBlockedIcons = new ArrayList<>();
     private Map<Startable, Startable.State> mStartableStates = new ArrayMap<>();
@@ -396,6 +401,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         initOperatorName();
         initNotificationIconArea();
 
+        mLyricController = new LyricController(getContext(), mStatusBar);
+        mStatusBarFragmentComponent.getHeadsUpAppearanceController().setLyricViewController(mLyricController);
+
         mSystemEventAnimator = getSystemEventAnimator();
         mCarrierConfigTracker.addCallback(mCarrierConfigCallback);
         mCarrierConfigTracker.addDefaultDataSubscriptionChangedListener(mDefaultDataListener);
@@ -466,6 +474,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
         mTunerService.addTunable(this, STATUS_BAR_SHOW_VIBRATE_ICON);
         mTunerService.addTunable(this, STATUSBAR_CLOCK_CHIP);
+        mTunerService.addTunable(this, Settings.Secure.STATUS_BAR_SHOW_LYRIC);
     }
 
     @Override
@@ -504,18 +513,23 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     public void onTuningChanged(String key, String newValue) {
         switch (key) {
             case STATUS_BAR_SHOW_VIBRATE_ICON:
-                mShowVibrateIcon = 
+                mShowVibrateIcon =
                         TunerService.parseIntegerSwitch(newValue, true);
                 updateBlockedIcons();
                 break;
             case STATUSBAR_CLOCK_CHIP:
-                mShowSBClockBg = 
+                mShowSBClockBg =
                         TunerService.parseIntegerSwitch(newValue, false);
                 updateStatusBarClock();
                 break;
             default:
                 break;
-         }
+        }
+        if (key.equals(Settings.Secure.STATUS_BAR_SHOW_LYRIC)) {
+            if (mLyricController != null) {
+                mLyricController.setEnabled(TunerService.parseIntegerSwitch(newValue, false));
+            }
+        }
     }
 
     private void updateStatusBarClock() {
@@ -739,8 +753,14 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         // Hide notifications if the disable flag is set or we have an ongoing activity.
         if (disableNotifications || hasOngoingActivity) {
             hideNotificationIconArea(animate && !hasOngoingActivity);
+            if (mLyricController != null) {
+                mLyricController.hideLyricView(animate);
+            }
         } else {
             showNotificationIconArea(animate);
+            if (mLyricController != null) {
+                mLyricController.showLyricView(animate);
+            }
         }
 
         // Show the ongoing activity chip only if there is an ongoing activity *and* notification
@@ -1092,6 +1112,36 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
                 pw.println(startable + ", state: " + startableState);
             }
             pw.decreaseIndent();
+        }
+    }
+    
+    private class LyricController extends LyricViewController {
+        private View mLeftSide;
+
+        public LyricController(Context context, View statusBar) {
+            super(context, statusBar);
+            mLeftSide = statusBar.findViewById(R.id.status_bar_start_side_except_heads_up);
+        }
+
+        public void showLyricView(boolean animate) {
+            StatusBarVisibilityModel visibilityModel = mLastModifiedVisibility;
+
+            boolean disableNotifications = !visibilityModel.getShowNotificationIcons();
+            boolean hasOngoingActivity;
+            if (Flags.statusBarScreenSharingChips()) {
+                hasOngoingActivity = mHasPrimaryOngoingActivity;
+            } else {
+                hasOngoingActivity = mOngoingCallController.hasOngoingCall();
+            }
+            if (!disableNotifications && !hasOngoingActivity && isLyricStarted()) {
+                animateHide(mLeftSide, animate);
+                animateShow(getView(), animate);
+            }
+        }
+
+        public void hideLyricView(boolean animate) {
+            animateHide(getView(), animate);
+            animateShow(mLeftSide, animate);
         }
     }
 }
