@@ -1536,7 +1536,7 @@ public class Environment {
 
     static File getDirectory(String variableName, String defaultPath) {
         String path = System.getenv(variableName);
-        return path == null ? new File(defaultPath) : new File(path);
+        return ((path == null || path.isEmpty()) ? new File(defaultPath) : new File(path));
     }
 
     @NonNull
