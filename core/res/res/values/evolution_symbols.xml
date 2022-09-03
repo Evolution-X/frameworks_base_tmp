@@ -156,4 +156,7 @@
     <java-symbol type="id" name="pocket_mode_hint_message" />
     <java-symbol type="string" name="pocket_mode_active" />
     <java-symbol type="string" name="pocket_mode_hint" />
+
+    <!-- Cycle through ringer modes -->
+    <java-symbol type="string" name="volume_dialog_ringer_guidance_normal" />
 </resources>

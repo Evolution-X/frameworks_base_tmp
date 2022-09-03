@@ -25,4 +25,7 @@
     <!-- Pocket Mode -->
     <string name="pocket_mode_active">Pocket Mode is active</string>
     <string name="pocket_mode_hint">Long press the screen or the power\nbutton to disable Pocket mode.</string>
+
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Calls and notifications will ring</string>
 </resources>
