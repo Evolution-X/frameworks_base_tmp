@@ -63,4 +63,7 @@
 
     <!-- Maximum vertical offset of navigation bar for burn-in protection -->
     <dimen name="navigation_bar_burn_in_offset_max_y">8dp</dimen>
+
+    <!-- The height of the WiFi toggle layout in Internet panel -->
+    <dimen name="internet_dialog_wifi_toggle_height">56dp</dimen>
 </resources>
