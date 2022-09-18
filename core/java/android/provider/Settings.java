@@ -19726,6 +19726,12 @@ public final class Settings {
         public static final String HIDE_SCREEN_CAPTURE_STATUS = "hide_screen_capture_status";
 
         /**
+         * Control whether to remove the restriction when selecting folders through SAF.
+         * @hide
+         */
+        public static final String NO_STORAGE_RESTRICT = "no_storage_restrict";
+
+        /**
          * Setting indicating whether Low Power Standby is enabled, if supported.
          *
          * Values are:
