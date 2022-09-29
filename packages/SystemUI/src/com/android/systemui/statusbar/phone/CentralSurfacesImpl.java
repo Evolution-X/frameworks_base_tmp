@@ -285,15 +285,18 @@ import javax.inject.Provider;
  * {@link ActivityStarterImpl}
  */
 @SysUISingleton
-public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, TunerService.Tunable {
-
-    private static final String STATUS_BAR_BRIGHTNESS_CONTROL =
-            "system:" + Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL;
+public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
+        TunerService.Tunable {
 
     private static final String BANNER_ACTION_CANCEL =
             "com.android.systemui.statusbar.banner_action_cancel";
     private static final String BANNER_ACTION_SETUP =
             "com.android.systemui.statusbar.banner_action_setup";
+
+    private static final String FORCE_SHOW_NAVBAR =
+            "lineagesystem:" + LineageSettings.System.FORCE_SHOW_NAVBAR;
+    private static final String STATUS_BAR_BRIGHTNESS_CONTROL =
+            "system:" + Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL;
 
     private static final int MSG_LAUNCH_TRANSITION_TIMEOUT = 1003;
     private static final int MSG_LONG_PRESS_BRIGHTNESS_CHANGE = 1004;
@@ -455,7 +458,6 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
     private final StatusBarSignalPolicy mStatusBarSignalPolicy;
     private final StatusBarHideIconsForBouncerManager mStatusBarHideIconsForBouncerManager;
     private final Lazy<LightRevealScrimViewModel> mLightRevealScrimViewModelLazy;
-    private final TunerService mTunerService;
 
     /** Controller for the Shade. */
     private final ShadeSurface mShadeSurface;
@@ -482,6 +484,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
     private final WallpaperManager mWallpaperManager;
     private final UserTracker mUserTracker;
     private final Provider<FingerprintManager> mFingerprintManager;
+    private final TunerService mTunerService;
     private final ActivityStarter mActivityStarter;
 
     private DisplayManager mDisplayManager;
@@ -843,13 +846,13 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
         mAlternateBouncerInteractor = alternateBouncerInteractor;
         mUserTracker = userTracker;
         mFingerprintManager = fingerprintManager;
+        mTunerService = tunerService;
         mActivityStarter = activityStarter;
         mSceneContainerFlags = sceneContainerFlags;
 
         mLockscreenShadeTransitionController = lockscreenShadeTransitionController;
         mStartingSurfaceOptional = startingSurfaceOptional;
         mDreamManager = dreamManager;
-        mTunerService = tunerService;
         lockscreenShadeTransitionController.setCentralSurfaces(this);
         statusBarWindowStateController.addListener(this::onStatusBarWindowStateChanged);
 
@@ -921,38 +924,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
             mNeedsNavigationBar = true;
         }
 
-        ContentObserver contentObserver = new ContentObserver(null) {
-            @Override
-            public void onChange(boolean selfChange) {
-                if (mDisplayId == Display.DEFAULT_DISPLAY
-                        && mWindowManagerService != null) {
-                    boolean forcedVisibility = mNeedsNavigationBar || LineageSettings.System.getInt(
-                            mContext.getContentResolver(),
-                            LineageSettings.System.FORCE_SHOW_NAVBAR, 0) != 0;
-                    boolean hasNavbar = getNavigationBarView() != null;
-                    mContext.getMainExecutor().execute(() -> {
-                        if (forcedVisibility) {
-                            if (!hasNavbar) {
-                                mNavigationBarController.onDisplayReady(mDisplayId);
-                            }
-                        } else {
-                            if (hasNavbar) {
-                                mNavigationBarController.onDisplayRemoved(mDisplayId);
-                            }
-                        }
-                    });
-                }
-            }
-        };
-        mContext.getContentResolver().registerContentObserver(
-                LineageSettings.System.getUriFor(LineageSettings.System.FORCE_SHOW_NAVBAR), false,
-                contentObserver);
-        contentObserver.onChange(true);
 
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         mDisplayManager = mContext.getSystemService(DisplayManager.class);
-
-        mTunerService.addTunable(this, STATUS_BAR_BRIGHTNESS_CONTROL);
 
         mDisplay = mContext.getDisplay();
         mDisplayId = mDisplay.getDisplayId();
@@ -984,6 +958,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
         }
 
         createAndAddWindows(result);
+
+        mTunerService.addTunable(this, FORCE_SHOW_NAVBAR);
+        mTunerService.addTunable(this, STATUS_BAR_BRIGHTNESS_CONTROL);
 
         // Set up the initial notification state. This needs to happen before CommandQueue.disable()
         setUpPresenter();
@@ -3098,6 +3075,38 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
                 || mScreenOffAnimationController.shouldIgnoreKeyguardTouches();
     }
 
+    @Override
+    public void onTuningChanged(String key, String newValue) {
+        switch (key) {
+            case FORCE_SHOW_NAVBAR:
+                if (mDisplayId != Display.DEFAULT_DISPLAY || mWindowManagerService == null)
+                    return;
+                boolean forcedVisibility = mNeedsNavigationBar ||
+                    TunerService.parseIntegerSwitch(newValue, false);
+                boolean hasNavbar = getNavigationBarView() != null;
+                mContext.getMainExecutor().execute(() -> {
+                    if (forcedVisibility) {
+                        if (!hasNavbar) {
+                            mNavigationBarController.onDisplayReady(mDisplayId);
+                        }
+                    } else {
+                        if (hasNavbar) {
+                            mNavigationBarController.onDisplayRemoved(mDisplayId);
+                        }
+                    }
+                });
+                break;
+            case STATUS_BAR_BRIGHTNESS_CONTROL:
+                mBrightnessControl =
+                        TunerService.parseIntegerSwitch(newValue, false);
+                if (mPhoneStatusBarViewController != null)
+                    mPhoneStatusBarViewController.setBrightnessControlEnabled(mBrightnessControl);
+                break;
+            default:
+                break;
+         }
+    }
+
     // Begin Extra BaseStatusBar methods.
 
     protected final CommandQueue mCommandQueue;
@@ -3214,20 +3223,6 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
     @Override
     public boolean isBouncerShowingScrimmed() {
         return isBouncerShowing() && mStatusBarKeyguardViewManager.primaryBouncerNeedsScrimming();
-    }
-
-    @Override
-    public void onTuningChanged(String key, String newValue) {
-        switch (key) {
-            case STATUS_BAR_BRIGHTNESS_CONTROL:
-                mBrightnessControl =
-                        TunerService.parseIntegerSwitch(newValue, false);
-                if (mPhoneStatusBarViewController != null)
-                    mPhoneStatusBarViewController.setBrightnessControlEnabled(mBrightnessControl);
-                break;
-            default:
-                break;
-         }
     }
 
     // End Extra BaseStatusBarMethods.
