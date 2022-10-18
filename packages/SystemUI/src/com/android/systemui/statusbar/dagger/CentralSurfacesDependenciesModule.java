@@ -30,6 +30,7 @@ import com.android.systemui.animation.ActivityTransitionAnimator;
 import com.android.systemui.animation.AnimationFeatureFlags;
 import com.android.systemui.animation.DialogTransitionAnimator;
 import com.android.systemui.bouncer.domain.interactor.AlternateBouncerInteractor;
+import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpHandler;
 import com.android.systemui.dump.DumpManager;
@@ -94,6 +95,7 @@ public interface CentralSurfacesDependenciesModule {
             MediaDataManager mediaDataManager,
             DumpManager dumpManager,
             StatusBarStateController statusBarStateController,
+            SysuiColorExtractor colorExtractor,
             TunerService tunerService) {
         return new NotificationMediaManager(
                 context,
@@ -103,6 +105,7 @@ public interface CentralSurfacesDependenciesModule {
                 mediaDataManager,
                 dumpManager,
                 statusBarStateController,
+                colorExtractor,
                 tunerService);
     }
 
