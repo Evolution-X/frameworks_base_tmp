@@ -16,5 +16,4 @@
   -->
 
 <resources>
-    <color name="settingslib_protection_color">@android:color/white</color>
 </resources>
