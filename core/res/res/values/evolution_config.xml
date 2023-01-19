@@ -46,4 +46,7 @@
 
     <!-- PowerOffAlarmService -->
     <bool name="config_powerOffAlarmEnabled">false</bool>
+
+    <!-- Display color inversion availability -->
+    <bool name="config_displayInversionAvailable">true</bool>
 </resources>
