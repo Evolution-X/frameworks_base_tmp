@@ -31,6 +31,8 @@ import com.android.systemui.statusbar.BlurUtils;
 import com.android.systemui.dump.DumpManager;
 
 import androidx.constraintlayout.helper.widget.Flow;
+import com.android.systemui.statusbar.BlurUtils;
+import com.android.systemui.dump.DumpManager;
 
 /**
  * Creates a customized Dialog for displaying the Shut Down and Restart actions.
