@@ -4,5 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
+   <!-- Whether to use Richtap vibration -->
+   <java-symbol type="bool" name="config_usesRichtapVibration" />
 </resources>
