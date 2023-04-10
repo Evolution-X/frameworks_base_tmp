@@ -1548,12 +1548,18 @@ public class ComputerEngine implements Computer {
             return null;
         }
 
-        if ((flags & MATCH_UNINSTALLED_PACKAGES) != 0
-                && ps.isSystem()) {
-            flags |= MATCH_ANY_USER;
+        final PackageUserStateInternal state = ps.getUserStateOrDefault(userId);
+        if ((flags & MATCH_UNINSTALLED_PACKAGES) != 0) {
+            final SettingBase callingSetting =
+                    mSettings.getSettingBase(UserHandle.getAppId(callingUid));
+            if (state.isHidden() && callingSetting != null && (callingSetting.getFlags() &
+                    ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM) {
+                return null;
+            } else if (ps.isSystem()) {
+                flags |= MATCH_ANY_USER;
+            }
         }
 
-        final PackageUserStateInternal state = ps.getUserStateOrDefault(userId);
         AndroidPackage p = ps.getPkg();
         if (p != null) {
             // Compute GIDs only if requested
@@ -2567,6 +2573,61 @@ public class ComputerEngine implements Computer {
         }
     }
 
+    private static boolean isBootCompleted() {
+        return android.os.SystemProperties.getBoolean("sys.boot_completed", false);
+    }
+
+    /**
+     * Returns whether caller is home.
+     */
+    private final boolean isCallerHome(int callingUid, int userId) {
+        final String home = mDefaultAppProvider.getDefaultHome(userId);
+        if (home == null) return false;
+        return isCallerSameApp(home, callingUid);
+    }
+
+    /**
+     * Returns whether caller is system, root, shell, or updated system app.
+     */
+    private final boolean isCallerSystem(int callingUid) {
+        if (isSystemOrRootOrShell(callingUid)) {
+            return true;
+        }
+        final SettingBase callingPs = mSettings.getSettingBase(UserHandle.getAppId(callingUid));
+        if (callingPs == null) return false;
+        final int callingFlags = callingPs.getFlags();
+        if (((callingFlags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM)
+                || ((callingFlags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)
+                        == ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) {
+            return true;
+        }
+        return false;
+    }
+
+    private final boolean shouldFilterApplicationCustom(
+            @Nullable PackageStateInternal ps, int callingUid, int userId) {
+        if (!isBootCompleted()) return false;
+        if (ps == null) return false;
+
+        final String packageName = ps.getPackageName();
+        if (packageName == null) return false;
+
+        // if the target and caller are the same application, skip
+        if (isCallerSameApp(packageName, callingUid)
+                // if the caller is system, root, shell, or updated system app, skip
+                || isCallerSystem(callingUid)
+                // if the caller is the current default home, skip
+                || isCallerHome(callingUid, userId)) {
+            return false;
+        }
+        // if the target is hidden app, do filter
+        if (ps.getUserStateOrDefault(userId).isHidden()) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Returns whether or not access to the application should be filtered.
      * <p>
@@ -2594,6 +2655,9 @@ public class ComputerEngine implements Computer {
         final boolean callerIsInstantApp = instantAppPkgName != null;
         final boolean packageArchivedForUser = ps != null && PackageArchiver.isArchived(
                 ps.getUserStateOrDefault(userId));
+        if (shouldFilterApplicationCustom(ps, callingUid, userId)) {
+            return true;
+        }
         // Don't treat hiddenUntilInstalled as an uninstalled state, phone app needs to access
         // these hidden application details to customize carrier apps. Also, allowing the system
         // caller accessing to application across users.
