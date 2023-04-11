@@ -271,5 +271,7 @@ public class SecureSettings {
         // Evolution X additions
         Settings.Secure.QUICK_SETTINGS_TILES_VIBRATE,
         Settings.Secure.VPN_ENFORCE_DNS,
+        Settings.Secure.DOZE_DOUBLE_TAP_GESTURE_AMBIENT,
+        Settings.Secure.DOZE_PICK_UP_GESTURE_AMBIENT,
     };
 }
