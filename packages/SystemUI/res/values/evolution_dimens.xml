@@ -51,4 +51,7 @@
     <!-- Additional gesture navbar lengths -->
     <dimen name="navigation_home_handle_width_short">72dp</dimen>
     <dimen name="navigation_home_handle_width_long">140dp</dimen>
+
+    <!-- QS A11 Style -->
+    <dimen name="custom_qs_panel_padding_top">0dp</dimen>
 </resources>
