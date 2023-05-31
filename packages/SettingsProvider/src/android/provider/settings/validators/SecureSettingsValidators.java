@@ -449,5 +449,6 @@ public class SecureSettingsValidators {
         // Evolution X additions
         VALIDATORS.put(Secure.CLIPBOARD_AUTO_CLEAR_ENABLED, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.CLIPBOARD_AUTO_CLEAR_TIMEOUT, NONE_NEGATIVE_LONG_VALIDATOR);
+        VALIDATORS.put(Secure.HIDE_DEVELOPER_STATUS, ANY_STRING_VALIDATOR);
     }
 }
