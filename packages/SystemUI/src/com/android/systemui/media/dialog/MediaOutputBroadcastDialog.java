@@ -68,7 +68,7 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
     @VisibleForTesting
     static final int BROADCAST_CODE_MIN_LENGTH = 4;
     @VisibleForTesting
-    static final int BROADCAST_NAME_MAX_LENGTH = 254;
+    static final int BROADCAST_NAME_MAX_LENGTH = 32;
 
     private ViewStub mBroadcastInfoArea;
     private ImageView mBroadcastQrCodeView;
