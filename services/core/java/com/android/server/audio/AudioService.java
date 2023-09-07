@@ -1207,10 +1207,7 @@ public class AudioService extends IAudioService.Stub
                     (MAX_STREAM_VOLUME[AudioSystem.STREAM_VOICE_CALL] * 3) / 4;
         }
 
-        int maxMusicVolume = SystemProperties.getInt("ro.config.media_vol_steps", -1);
-        if (maxMusicVolume != -1) {
-            MAX_STREAM_VOLUME[AudioSystem.STREAM_MUSIC] = maxMusicVolume;
-        }
+        MAX_STREAM_VOLUME[AudioSystem.STREAM_MUSIC] = 15;
 
         mDefaultMaxMusicVolume = MAX_STREAM_VOLUME[AudioSystem.STREAM_MUSIC];
         mSettings.putSystemIntForUser(mContentResolver,
@@ -3555,6 +3552,7 @@ public class AudioService extends IAudioService.Stub
         if (mUseFixedVolume) {
             return;
         }
+        mVolumeController.onVolumeKeyPressed();
         if (DEBUG_VOL) Log.d(TAG, "adjustStreamVolume() stream=" + streamType + ", dir=" + direction
                 + ", flags=" + flags + ", caller=" + caller);
 
@@ -3640,7 +3638,10 @@ public class AudioService extends IAudioService.Stub
             }
         } else {
             // convert one UI step (+/-1) into a number of internal units on the stream alias
-            step = rescaleStep(10, streamType, streamTypeAlias);
+            int streamStep = mVolumeController.isLongPress() ? (100 / MAX_STREAM_VOLUME[streamTypeAlias]) : 10;
+            streamStep = streamStep > 10 ? 10 : streamStep;
+            if (DEBUG_VOL) Log.d("streamStep", "scale: [ streamStep=" + streamStep + " ]");
+            step = rescaleStep(streamStep, streamType, streamTypeAlias);
         }
 
         // If either the client forces allowing ringer modes for this adjustment,
@@ -4971,6 +4972,20 @@ public class AudioService extends IAudioService.Stub
             flags &= ~AudioManager.FLAG_SHOW_UI;
         }
         mVolumeController.postVolumeChanged(streamType, flags);
+        // skip updating the volume group index if stream type is music
+        if (mIsSingleVolume || streamType == AudioSystem.STREAM_MUSIC) {
+            if ((flags & AudioManager.FLAG_FIXED_VOLUME) == 0) {
+                oldIndex = (oldIndex + 5) / 10;
+                index = (index + 5) / 10;
+                if (index != oldIndex) {
+                    Intent intent = new Intent(AudioManager.VOLUME_CHANGED_ACTION);
+                    intent.putExtra(AudioManager.EXTRA_VOLUME_STREAM_TYPE, streamType);
+                    intent.putExtra(AudioManager.EXTRA_VOLUME_STREAM_VALUE, index);
+                    intent.putExtra(AudioManager.EXTRA_PREV_VOLUME_STREAM_VALUE, oldIndex);
+                    sendBroadcastToAll(intent, null);
+                }
+            }
+        }
     }
 
     // Don't show volume UI when:
@@ -8915,7 +8930,7 @@ public class AudioService extends IAudioService.Stub
                     }
                 }
             }
-            if (changed) {
+            if (changed && !mIsSingleVolume && mStreamType != AudioSystem.STREAM_MUSIC) {
                 // If associated to volume group, update group cache
                 updateVolumeGroupIndex(device, /* forceMuteState= */ false);
 
@@ -8934,7 +8949,7 @@ public class AudioService extends IAudioService.Stub
                 if ((index != oldIndex) && isCurrentDevice) {
                     // for single volume devices, only send the volume change broadcast
                     // on the alias stream
-                    if (!mIsSingleVolume || (mStreamVolumeAlias[mStreamType] == mStreamType)) {
+                    if (mStreamVolumeAlias[mStreamType] == mStreamType) {
                         mVolumeChanged.putExtra(AudioManager.EXTRA_VOLUME_STREAM_VALUE, index);
                         mVolumeChanged.putExtra(AudioManager.EXTRA_PREV_VOLUME_STREAM_VALUE,
                                 oldIndex);
@@ -11987,11 +12002,14 @@ public class AudioService extends IAudioService.Stub
     /** Wrapper which encapsulates the {@link IVolumeController} functionality. */
     public class VolumeController implements ISafeHearingVolumeController {
         private static final String TAG = "VolumeController";
+        private static final long VOLUME_KEY_PRESS_INTERVAL = 80;
 
         private IVolumeController mController;
         private boolean mVisible;
         private long mNextLongPress;
+        private long mNextKeyLongPress;
         private int mLongPressTimeout;
+        private boolean mIsLongPress;
 
         public void setController(IVolumeController controller) {
             mController = controller;
@@ -12005,6 +12023,22 @@ public class AudioService extends IAudioService.Stub
         public void loadSettings(ContentResolver cr) {
             mLongPressTimeout = mSettings.getSecureIntForUser(cr,
                     Settings.Secure.LONG_PRESS_TIMEOUT, 500, UserHandle.USER_CURRENT);
+        }
+
+        public void onVolumeKeyPressed() {
+            long currentTime = SystemClock.uptimeMillis();
+            if (currentTime >= mNextKeyLongPress) {
+                this.mIsLongPress = false;
+                if (DEBUG_VOL) Log.d(TAG, "Short volume key press detected");
+            } else {
+                this.mIsLongPress = true;
+                if (DEBUG_VOL) Log.d(TAG, "Long volume key press detected");
+            }
+            mNextKeyLongPress = currentTime + VOLUME_KEY_PRESS_INTERVAL;
+        }
+
+        public boolean isLongPress() {
+            return mIsLongPress;
         }
 
         public boolean suppressAdjustment(int resolvedStream, int flags, boolean isMute) {
