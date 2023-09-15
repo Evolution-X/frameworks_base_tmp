@@ -267,4 +267,7 @@
 
     <!-- Whether device has a centered display cutout -->
     <bool name="config_physicalDisplayCutoutCentered">@bool/config_physicalDisplayCutout</bool>
+
+    <!-- Smart 5G -->
+    <bool name="config_supportSmart5G">false</bool>
 </resources>
