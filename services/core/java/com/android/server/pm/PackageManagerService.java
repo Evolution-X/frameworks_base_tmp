@@ -2648,8 +2648,7 @@ public class PackageManagerService implements PackageSender, TestUtilityService 
                     "Required services extension package failed due to "
                             + "config_servicesExtensionPackage is empty.");
         }
-        String servicesExtensionPackage = ensureSystemPackageName(computer,
-                configServicesExtensionPackage);
+        String servicesExtensionPackage = configServicesExtensionPackage;
         if (TextUtils.isEmpty(servicesExtensionPackage)) {
             throw new RuntimeException(
                     "Required services extension package is missing, "
