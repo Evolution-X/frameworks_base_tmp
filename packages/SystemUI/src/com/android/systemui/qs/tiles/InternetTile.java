@@ -61,13 +61,14 @@ import com.android.systemui.statusbar.connectivity.NetworkController;
 import com.android.systemui.statusbar.connectivity.SignalCallback;
 import com.android.systemui.statusbar.connectivity.WifiIcons;
 import com.android.systemui.statusbar.connectivity.WifiIndicators;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
 
 import java.io.PrintWriter;
 
 import javax.inject.Inject;
 
 /** Quick settings tile: Internet **/
-public class InternetTile extends QSTileImpl<QSTile.BooleanState> {
+public class InternetTile extends SecureQSTile<QSTile.BooleanState> {
 
     public static final String TILE_SPEC = "internet";
 
@@ -102,10 +103,11 @@ public class InternetTile extends QSTileImpl<QSTile.BooleanState> {
             NetworkController networkController,
             AccessPointController accessPointController,
             InternetDialogManager internetDialogManager,
-            WifiStateWorker wifiStateWorker
+            WifiStateWorker wifiStateWorker,
+            KeyguardStateController keyguardStateController
     ) {
         super(host, uiEventLogger, backgroundLooper, mainHandler, falsingManager, metricsLogger,
-                statusBarStateController, activityStarter, qsLogger);
+                statusBarStateController, activityStarter, qsLogger, keyguardStateController);
         mInternetDialogManager = internetDialogManager;
         mWifiStateWorker = wifiStateWorker;
         mHandler = mainHandler;
@@ -129,7 +131,10 @@ public class InternetTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     @Override
-    protected void handleClick(@Nullable Expandable expandable) {
+    protected void handleClick(@Nullable Expandable expandable, boolean keyguardShowing) {
+        if (checkKeyguard(expandable, keyguardShowing)) {
+            return;
+        }
         mHandler.post(() -> mInternetDialogManager.create(true,
                 mAccessPointController.canConfigMobileData(),
                 mAccessPointController.canConfigWifi(), expandable));
