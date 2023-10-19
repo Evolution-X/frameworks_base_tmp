@@ -161,6 +161,10 @@ public class PowerOffAlarmService extends SystemService {
     }
 
     private synchronized void updateNotification(boolean isSet) {
+        if (mNotificationManager == null) {
+            Slog.e(TAG, "updateNotification: mNotificationManager is null!");
+            return;
+        }
         mNotificationManager.cancel(NOTIFICATION_ID);
         if (!isSet) return;
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
