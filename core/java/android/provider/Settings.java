@@ -7171,6 +7171,11 @@ public final class Settings {
         public static final String NAVBAR_LONG_PRESS_GESTURE = "navbar_long_press_gesture";
 
         /**
+         * @hide
+         */
+        public static final String ISLAND_NOTIFICATION = "island_notification";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *

@@ -63,6 +63,9 @@ interface ShadeViewController {
     /** Ensures that the touchable region is updated. */
     @Deprecated("No longer supported. Do not add new calls to this.") fun updateTouchableRegion()
 
+    /** island visibility  */
+    fun showIsland(show: Boolean)
+
     /**
      * Sends an external (e.g. Status Bar) touch event to the Shade touch handler.
      *

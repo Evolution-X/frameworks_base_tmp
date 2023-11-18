@@ -98,6 +98,8 @@ open class ShadeViewControllerEmptyImpl @Inject constructor() :
 
     override fun getScrollerLayoutController(): com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayoutController? = null
     override fun getKeyguardBottomAreaView(): com.android.systemui.statusbar.phone.KeyguardBottomAreaView? = null
+
+    override fun showIsland(show: Boolean) {}
 }
 
 class ShadeHeadsUpTrackerEmptyImpl : ShadeHeadsUpTracker {

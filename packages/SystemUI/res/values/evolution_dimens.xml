@@ -177,4 +177,8 @@
     <dimen name="nowbar_height">72dp</dimen>
     <dimen name="nowbar_width">260dp</dimen>
     <dimen name="nowbar_margin_bottom">18dp</dimen>
+
+    <!-- Island notification -->
+    <dimen name="island_icon_size">48dp</dimen>
+    <dimen name="island_side_margin">12dp</dimen>
 </resources>
