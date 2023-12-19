@@ -133,8 +133,8 @@ public class StatusBarStateControllerImpl implements
     private int mHistoryIndex = 0;
     private HistoricalState[] mHistoricalRecords = new HistoricalState[HISTORY_SIZE];
     // These views are used by InteractionJankMonitor to get callback from HWUI.
-    private View mView;
-    private KeyguardClockSwitch mClockSwitchView;
+    public View mView;
+    public KeyguardClockSwitch mClockSwitchView;
 
     /**
      * If any of the system bars is hidden.
@@ -144,12 +144,12 @@ public class StatusBarStateControllerImpl implements
     /**
      * If the device is currently pulsing (AOD2).
      */
-    private boolean mPulsing;
+    public boolean mPulsing;
 
     /**
      * If the device is currently dozing or not.
      */
-    private boolean mIsDozing;
+    public boolean mIsDozing;
 
     /**
      * If the device is currently dreaming or not.
@@ -164,22 +164,22 @@ public class StatusBarStateControllerImpl implements
     /**
      * Current {@link #mDozeAmount} animator.
      */
-    private ValueAnimator mDarkAnimator;
+    public ValueAnimator mDarkAnimator;
 
     /**
      * Current doze amount in this frame.
      */
-    private float mDozeAmount;
+    public float mDozeAmount;
 
     /**
      * Where the animator will stop.
      */
-    private float mDozeAmountTarget;
+    public float mDozeAmountTarget;
 
     /**
      * The type of interpolator that should be used to the doze animation.
      */
-    private Interpolator mDozeInterpolator = Interpolators.FAST_OUT_SLOW_IN;
+    public Interpolator mDozeInterpolator = Interpolators.FAST_OUT_SLOW_IN;
 
     @Inject
     public StatusBarStateControllerImpl(
@@ -461,7 +461,7 @@ public class StatusBarStateControllerImpl implements
     }
 
     @VisibleForTesting
-    protected ObjectAnimator createDarkAnimator() {
+    public ObjectAnimator createDarkAnimator() {
         SceneContainerFlag.assertInLegacyMode();
         ObjectAnimator darkAnimator = ObjectAnimator.ofFloat(
                 this, SET_DARK_AMOUNT_PROPERTY, mDozeAmountTarget);
@@ -487,7 +487,7 @@ public class StatusBarStateControllerImpl implements
         return darkAnimator;
     }
 
-    private void setDozeAmountInternal(float dozeAmount) {
+    public void setDozeAmountInternal(float dozeAmount) {
         if (Float.compare(dozeAmount, mDozeAmount) == 0) {
             return;
         }
