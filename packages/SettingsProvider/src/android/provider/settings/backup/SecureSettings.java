@@ -270,5 +270,6 @@ public class SecureSettings {
         Settings.Secure.VISUAL_QUERY_ACCESSIBILITY_DETECTION_ENABLED,
         // Evolution X additions
         Settings.Secure.QUICK_SETTINGS_TILES_VIBRATE,
+        Settings.Secure.VPN_ENFORCE_DNS,
     };
 }

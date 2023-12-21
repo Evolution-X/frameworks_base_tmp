@@ -424,5 +424,7 @@ public class SecureSettingsValidators {
         VALIDATORS.put(Secure.CAMERA_EXTENSIONS_FALLBACK, BOOLEAN_VALIDATOR);
         // Evolution X additions
         VALIDATORS.put(Secure.QUICK_SETTINGS_TILES_VIBRATE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Secure.VPN_ENFORCE_DNS, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Secure.VPN_ENFORCE_DNS_STORE, new DiscreteValueValidator(new String[] {"-1", "0", "1", "2"}));
     }
 }
