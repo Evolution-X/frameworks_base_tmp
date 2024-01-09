@@ -3865,4 +3865,7 @@ Action + ESC for this.</string>
     <string name="qs_edit_mode_category_unknown">
         Unknown
     </string>
+
+    <!-- AI Assistant affordance [CHAR LIMIT=32] -->
+    <string name="accessibility_assistant_button">Ai Assistant</string>
 </resources>
