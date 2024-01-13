@@ -290,6 +290,8 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
             "system:" + Settings.System.NOTIFICATION_MATERIAL_DISMISS;
     private static final String ISLAND_NOTIFICATION =
             "system:" + Settings.System.ISLAND_NOTIFICATION;
+    private static final String HEADS_UP_NOTIFICATIONS_ENABLED =
+            "global:" + Settings.Global.HEADS_UP_NOTIFICATIONS_ENABLED;
 
     /**
      * Whether the Shade should animate to reflect Back gesture progress.
@@ -637,6 +639,7 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
     private IslandView mNotifIsland;
     private NotificationStackScrollLayout mNotificationStackScroller;
     private boolean mUseIslandNotification;
+    private boolean mUseHeadsUp;
 
     private final Runnable mFlingCollapseRunnable = () -> fling(0, false /* expand */,
             mNextCollapseSpeedUpFactor, false /* expandBecauseOfFalsing */);
@@ -4675,6 +4678,7 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
             mDoubleTapToSleepObserver.onChange(true);
             mTunerService.addTunable(this, NOTIFICATION_MATERIAL_DISMISS);
             mTunerService.addTunable(this, ISLAND_NOTIFICATION);
+            mTunerService.addTunable(this, HEADS_UP_NOTIFICATIONS_ENABLED);
             // Theme might have changed between inflating this view and attaching it to the
             // window, so
             // force a call to onThemeChanged
@@ -4706,7 +4710,11 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
                     break;
                 case ISLAND_NOTIFICATION:
                     mUseIslandNotification = TunerService.parseIntegerSwitch(newValue, false);
-                    mNotifIsland.setIslandEnabled(mUseIslandNotification);
+                    mNotifIsland.setIslandEnabled(mUseIslandNotification && mUseHeadsUp);
+                    break;
+                case HEADS_UP_NOTIFICATIONS_ENABLED:
+                    mUseHeadsUp = TunerService.parseIntegerSwitch(newValue, false);
+                    mNotifIsland.setIslandEnabled(mUseIslandNotification && mUseHeadsUp);
                     break;
                 default:
                     break;
@@ -5394,11 +5402,14 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
 
     @Override
     public void showIsland(boolean show) {
-        if (!mUseIslandNotification) return;
-        mNotifIsland.showIsland(show, getExpandedFraction());
+        if (mUseIslandNotification && mUseHeadsUp) {
+            mNotifIsland.showIsland(show, getExpandedFraction());
+        }
     }
 
     protected void updateIslandVisibility() {
-        mNotifIsland.updateIslandVisibility(getExpandedFraction());
+        if (mUseIslandNotification && mUseHeadsUp) {
+            mNotifIsland.updateIslandVisibility(getExpandedFraction());
+        }
     }
 }
