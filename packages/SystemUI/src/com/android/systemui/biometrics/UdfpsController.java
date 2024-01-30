@@ -531,15 +531,18 @@ public class UdfpsController implements DozeReceiver, Dumpable {
     private boolean onTouch(long requestId, @NonNull MotionEvent event, boolean fromUdfpsView) {
         if (!fromUdfpsView) {
             Log.e(TAG, "ignoring the touch injected from outside of UdfpsView");
+            hideUdfpsAnimation();
             return false;
         }
         if (mOverlay == null) {
             Log.w(TAG, "ignoring onTouch with null overlay");
+            hideUdfpsAnimation();
             return false;
         }
         if (!mOverlay.matchesRequestId(requestId)) {
             Log.w(TAG, "ignoring stale touch event: " + requestId + " current: "
                     + mOverlay.getRequestId());
+            hideUdfpsAnimation();
             return false;
         }
         if (event.getAction() == MotionEvent.ACTION_DOWN
@@ -556,6 +559,7 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                     && !mAlternateBouncerInteractor.isVisibleState())
                     || mPrimaryBouncerInteractor.isInTransit()) {
                 Log.w(TAG, "ignoring touch due to qsDragProcess or primaryBouncerInteractor");
+                hideUdfpsAnimation();
                 return false;
             }
         }
@@ -564,6 +568,7 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                 mOverlayParams);
         if (result instanceof TouchProcessorResult.Failure) {
             Log.w(TAG, ((TouchProcessorResult.Failure) result).getReason());
+            hideUdfpsAnimation();
             return false;
         }
 
@@ -1170,9 +1175,9 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                 cb.onFingerUp();
             }
         }
-        if (mUdfpsAnimation != null) {
-            mUdfpsAnimation.hide();
-        }
+
+        hideUdfpsAnimation();
+
         mOnFingerDown = false;
         unconfigureDisplay(view);
         cancelAodSendFingerUpAction();
@@ -1180,6 +1185,12 @@ public class UdfpsController implements DozeReceiver, Dumpable {
 
     public boolean isAnimationEnabled() {
         return mUdfpsAnimation != null && mUdfpsAnimation.isAnimationEnabled();
+    }
+
+    private void hideUdfpsAnimation() {
+        if (mUdfpsAnimation != null) {
+            mUdfpsAnimation.hide();
+        }
     }
 
     /**
