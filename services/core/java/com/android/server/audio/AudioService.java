@@ -9836,21 +9836,26 @@ public class AudioService extends IAudioService.Stub
         }
 
         private void updateStreamMax(int stream, int newMax) {
-            AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-            if (am == null) return;
             // keep the old volume fraction
-            final float oldMax = am.getStreamMaxVolume(stream);
-            final float oldVolume = am.getStreamVolume(stream);
-            final int newVolume = Math.round(((float) newMax / oldMax) * oldVolume);
+            final float oldMax = getStreamMaxVolume(stream);
+            final float oldVolume = getStreamVolume(stream);
+            final float min = getStreamMinVolume(stream);
+            final float fraction = (oldVolume - min) / (oldMax - min);
             // set the new max
-            mStreamStates[stream].mIndexMax = newMax * 10;
-            AudioSystem.initStreamVolume(stream, mStreamStates[stream].mIndexMin, newMax);
             MAX_STREAM_VOLUME[stream] = newMax;
+            mStreamStates[stream].mIndexMax = newMax * 10;
+            AudioSystem.initStreamVolume(stream, mStreamStates[stream].mIndexMin / 10, newMax);
             // notify listeners (should be volume dialog only)
             Intent intent = new Intent(AudioManager.ACTION_MAX_CHANGED);
             sendBroadcastToAll(intent, null);
             // set the volume to the old fraction
-            am.setStreamVolume(stream, newVolume, 0);
+            AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            if (am != null) {
+                final int newVolume = Math.round(fraction * (float) getStreamMaxVolume(stream));
+                am.setStreamVolume(stream, newVolume, 0);
+            }
+            // re-init everything, everywhere. 
+            onAudioServerDied();
         }
     }
 
