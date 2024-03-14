@@ -26,6 +26,7 @@ import android.compat.annotation.ChangeId;
 import android.compat.annotation.EnabledSince;
 import android.compat.annotation.UnsupportedAppUsage;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.BlendMode;
 import android.graphics.Canvas;
@@ -35,6 +36,7 @@ import android.graphics.RecordingCanvas;
 import android.graphics.Rect;
 import android.graphics.RenderNode;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -42,6 +44,8 @@ import android.view.animation.Interpolator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import com.android.internal.util.android.VibrationUtils;
 
 /**
  * This class performs the graphical effect used at the edges of scrollable widgets
@@ -218,6 +222,9 @@ public class EdgeEffect {
     private float mDisplacement = 0.5f;
     private float mTargetDisplacement = 0.5f;
 
+    private Context mContext;
+    private long mLastVibrationTime = 0;
+
     /**
      * Current edge effect type, consumers should always query
      * {@link #getCurrentEdgeEffectBehavior()} instead of this parameter
@@ -233,6 +240,7 @@ public class EdgeEffect {
      */
     public EdgeEffect(Context context) {
         this(context, null);
+        mContext = context;
     }
 
     /**
@@ -241,6 +249,7 @@ public class EdgeEffect {
      * @param attrs The attributes of the XML tag that is inflating the view
      */
     public EdgeEffect(@NonNull Context context, @Nullable AttributeSet attrs) {
+        mContext = context;
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, com.android.internal.R.styleable.EdgeEffect);
         final int themeColor = a.getColor(
@@ -497,6 +506,7 @@ public class EdgeEffect {
             mState = STATE_RECEDE;
             mVelocity = velocity * ON_ABSORB_VELOCITY_ADJUSTMENT;
             mStartTime = AnimationUtils.currentAnimationTimeMillis();
+            triggerVibration();
         } else if (edgeEffectBehavior == TYPE_GLOW) {
             mState = STATE_ABSORB;
             mVelocity = 0;
@@ -521,8 +531,21 @@ public class EdgeEffect {
                     mGlowAlphaStart,
                     Math.min(velocity * VELOCITY_GLOW_FACTOR * .00001f, MAX_ALPHA));
             mTargetDisplacement = 0.5f;
+            triggerVibration();
         } else {
             finish();
+        }
+    }
+    
+    private void triggerVibration() {
+        boolean callerHasVibratePermission = mContext.checkCallingOrSelfPermission(
+                    android.Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED;
+        int vibrateIntensity = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.EDGE_SCROLLING_HAPTICS_INTENSITY, 1);
+        long currentTime = AnimationUtils.currentAnimationTimeMillis();
+        if (callerHasVibratePermission && (currentTime - mLastVibrationTime >= 80)) {
+            VibrationUtils.triggerVibration(mContext, vibrateIntensity);
+            mLastVibrationTime = currentTime;
         }
     }
 
