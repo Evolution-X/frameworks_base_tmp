@@ -150,11 +150,13 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
                 Log.v(TAG, "DEBUG_MEDIA: onMetadataChanged: " + metadata);
             }
             if (mIslandEnabled && mIslandNowPlayingEnabled) {
+                notifUtils.cancelNowPlayingNotification();
                 if (mStatusBarStateController.getState() != KEYGUARD 
-                        && !mStatusBarStateController.isDozing()) {
+                        && !mStatusBarStateController.isDozing()
+                        && PlaybackState.STATE_PLAYING == getMediaControllerPlaybackState(mMediaController) 
+                        && mMediaMetadata != null) {
                     notifUtils.showNowPlayingNotification(metadata);
                 }
-                notifUtils.cancelNowPlayingNotification();
             }
             if (notificationMediaManagerBackgroundExecution()) {
                 mBackgroundExecutor.execute(() -> setMediaMetadata(metadata));
