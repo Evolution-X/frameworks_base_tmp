@@ -47,6 +47,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
@@ -179,6 +180,9 @@ public class ScreenMediaRecorder extends MediaProjection.Callback {
         int resRatio = mLowQuality ? LOW_VIDEO_FRAME_RATE_TO_RESOLUTION_RATIO
                 : VIDEO_FRAME_RATE_TO_RESOLUTION_RATIO;
         int vidBitRate = width * height * refreshRate / VIDEO_FRAME_RATE * resRatio;
+        boolean unlimit = Settings.System.getInt(
+                mContext.getContentResolver(),
+                Settings.System.UNLIMIT_SCREENRECORD, 0) != 0;
         long maxFilesize = mLongerDuration ? MAX_FILESIZE_BYTES_LONGER : MAX_FILESIZE_BYTES;
         if (!mHEVC) {
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
@@ -197,7 +201,7 @@ public class ScreenMediaRecorder extends MediaProjection.Callback {
         mMediaRecorder.setVideoFrameRate(refreshRate);
         mMediaRecorder.setVideoEncodingBitRate(vidBitRate);
         mMediaRecorder.setMaxDuration(mLongerDuration ? 0 : MAX_DURATION_MS);
-        mMediaRecorder.setMaxFileSize(maxFilesize);
+        mMediaRecorder.setMaxFileSize(unlimit ? 0 : maxFilesize);
 
         // Set up audio
         if (mAudioSource == MIC) {
