@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2019-2024 The Evolution X Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Button that copies the url to the log of a crashed application -->
+    <string name="aerr_copy">Copia l\'URL del log di crash</string>
+    <string name="url_copy_success">URL copiato con successo</string>
+    <string name="url_copy_failed">Si è verificato un errore durante il caricamento del log su dogbin</string>
+    <!-- PowerOffAlarmService -->
+    <string name="notification_channel_poweroff_alarm">Sveglia con telefono spento</string>
+    <string name="poweroff_alarm_title">Sveglia con telefono spento impostata</string>
+    <string name="poweroff_alarm_body">È stata rilevata una sveglia e il dispositivo si accenderà 2 minuti prima che suoni</string>
+    <!-- Lock gesture -->
+    <string name="gesture_locked_warning">Scorri di nuovo per sbloccare i gesti</string>
+    <!-- App lock -->
+    <string name="unlock_application">Sblocca <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    <!-- Pocket Mode -->
+    <string name="pocket_mode_active">Modalità Tasca attiva</string>
+    <string name="pocket_mode_hint">Tieni premuto lo schermo o il pulsante di accensione\nper disabilitare la Modalità Tasca.</string>
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">La suoneria sarà attiva per chiamate e notifiche</string>
+    <!-- Settings Restart -->
+    <string name="settings_restart_title">Riavvio delle impostazioni richiesto</string>
+    <string name="settings_restart_message">Per rendere effettive tutte le modifiche, è necessario un riavvio delle impostazioni. Riavviare le impostazioni ora?</string>
+    <!-- System Reboot -->
+    <string name="system_restart_title">Riavvio del sistema richiesto</string>
+    <string name="system_restart_message">Per rendere effettive tutte le modifiche, è necessario un riavvio del sistema. Riavviarlo ora?</string>
+    <!-- SystemUI Restart -->
+    <string name="systemui_restart_title">Riavvio della SystemUI richiesto</string>
+    <string name="systemui_restart_message">Per rendere effettive tutte le modifiche, è necessario un riavvio della SystemUI. Riavviare la SystemUI ora?</string>
+    <!-- Launcher Restart -->
+    <string name="launcher_restart_title">Riavvio del launcher richiesto</string>
+    <string name="launcher_restart_message">Per rendere effettive tutte le modifiche, è necessario un riavvio del launcher. Riavviare il launcher ora?</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2019-2024 The Evolution X Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Button that copies the url to the log of a crashed application -->
+    <string name="aerr_copy">Çökme günlüğü URL\' sini kopyala</string>
+    <string name="url_copy_success">URL başarıyla kopyalandı</string>
+    <string name="url_copy_failed">Günlük hastebin\'e yüklenirken bir hata oluştu</string>
+    <!-- Pocket Lock -->
+    <string name="pocket_lock_message_long_press">Kilidi açmak için güç tuşuna basılı tutun</string>
+    <string name="pocket_view_title">Cep modu açık</string>
+    <string name="pocket_view_title_cancel">Telefonunuzu kullanmak için:</string>
+    <string name="pocket_view_top_tag_cancel">Telefonunuzun mavi alanında herhangi bir engel olup olmadığını kontrol edin ve herhangi bir kir veya toz varsa temizleyin.</string>
+    <string name="pocket_view_top_tag_cancel2">Cep modundan çıkmaya zorlamak için güç düğmesine uzun basın.</string>
+    <string name="pocket_view_top_tag_number1">1.\u0020</string>
+    <string name="pocket_view_top_tag_number2">2.\u0020</string>
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Çağrılar ve bildirimler telefonu çaldıracak</string>
+    <!-- App lock -->
+    <string name="unlock_application">Kilidi aç <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    <!-- PowerOffAlarmService -->
+    <string name="notification_channel_poweroff_alarm">Güç kapalı alarm</string>
+    <string name="poweroff_alarm_title">Güç kapalı alarmı ayarla</string>
+    <string name="poweroff_alarm_body">Bir alarm algılandı ve cihaz 2 dakika öncesinde açılacak</string>
+</resources>

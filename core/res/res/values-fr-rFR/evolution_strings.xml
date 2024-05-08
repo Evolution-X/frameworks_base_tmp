@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2019-2024 The Evolution X Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Button that copies the url to the log of a crashed application -->
+    <string name="aerr_copy">Copier l\'URL du rapport d\'erreur</string>
+    <string name="url_copy_success">URL copiée avec succès</string>
+    <string name="url_copy_failed">Une erreur est survenue pendant l\'envoi du rapport à hastebin</string>
+    <!-- PowerOffAlarmService -->
+    <string name="notification_channel_poweroff_alarm">Alarme appareil éteint</string>
+    <string name="poweroff_alarm_title">Alarme appareil éteint réglée</string>
+    <string name="poweroff_alarm_body">Une alarme a été détectée et l\'appareil va s\'allumer 2 minutes avant son échéance</string>
+    <!-- Lock gesture -->
+    <string name="gesture_locked_warning">Glisser à nouveau pour déverrouiller les gestes</string>
+    <!-- App lock -->
+    <string name="unlock_application">Dévérouiller <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    <!-- Pocket Mode -->
+    <string name="pocket_mode_active">Le mode poche est activé</string>
+    <string name="pocket_mode_hint">Appuyez longuement sur l\'écran ou le bouton d\'alimentation\npour désactiver le mode Poche.</string>
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Sonnerie activée pour les notifications et les appels</string>
+    <!-- Settings Restart -->
+    <string name="settings_restart_title">Redémarrage de l\'interface utilisateur requis</string>
+    <string name="settings_restart_message">Pour que toutes les modifications prennent effet, un redémarrage de l\'interface utilisateur est nécessaire. Redémarrer l\'interface utilisateur maintenant ?</string>
+    <!-- System Reboot -->
+    <string name="system_restart_title">Redémarrage du système requis</string>
+    <string name="system_restart_message">Pour que toutes les modifications prennent effet, un redémarrage du système est nécessaire. Redémarrer le système maintenant ?</string>
+    <!-- SystemUI Restart -->
+    <string name="systemui_restart_title">Redémarrage de l\'interface utilisateur requis</string>
+    <string name="systemui_restart_message">Pour que toutes les modifications prennent effet, un redémarrage de l\'interface utilisateur est nécessaire. Redémarrer l\'interface utilisateur maintenant ?</string>
+    <!-- Launcher Restart -->
+    <string name="launcher_restart_title">Redémarrage du lanceur requis</string>
+    <string name="launcher_restart_message">Pour que toutes les modifications prennent effet, un redémarrage du lanceur est nécessaire. Redémarrer le lanceur maintenant ?</string>
+</resources>
