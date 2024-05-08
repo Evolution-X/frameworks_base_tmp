@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2019-2024 The Evolution X Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Button that copies the url to the log of a crashed application -->
+    <string name="aerr_copy">Skopiuj log awarii</string>
+    <string name="url_copy_success">Skopiowano pomyślnie</string>
+    <string name="url_copy_failed">Wystąpił błąd podczas przesyłania logu</string>
+    <!-- Pocket Lock -->
+    <string name="pocket_lock_message_long_press">Naciśnij i przytrzymaj przycisk zasilania, aby odblokować</string>
+    <string name="pocket_view_title">Tryb kieszonkowy jest włączony</string>
+    <string name="pocket_view_title_cancel">Aby aktywować swój telefon:</string>
+    <string name="pocket_view_top_tag_cancel">Nie zakrywaj oraz usuń wszelkie zabrudzenia lub kurz z niebieskiego obszaru swojego urządzenia.</string>
+    <string name="pocket_view_top_tag_cancel2">Przytrzymaj przycisk zasilania, aby wymusić wyjście z trybu kieszonkowego.</string>
+    <string name="pocket_view_top_tag_number1">1.\u0020</string>
+    <string name="pocket_view_top_tag_number2">2.\u0020</string>
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Połączenia i powiadomienia użyją dzwonka</string>
+    <!-- App lock -->
+    <string name="unlock_application">Odblokuj <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    <!-- PowerOffAlarmService -->
+    <string name="notification_channel_poweroff_alarm">Wyłącz alarm</string>
+    <string name="poweroff_alarm_title">Ustawienia wyłączenia alarmu</string>
+    <string name="poweroff_alarm_body">Alarm został wykryty, urządzenie włączy się 2 minuty przed alarmem</string>
+</resources>
