@@ -61,6 +61,7 @@ import lineageos.providers.LineageSettings;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NavigationBarInflaterView extends FrameLayout implements TunerService.Tunable {
     private static final String TAG = "NavBarInflater";
@@ -156,7 +157,7 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
     private int mHomeHandleWidthMode = 0;
     private boolean mIsTaskbarEnabled;
 
-    private boolean mIsAttachedToWindow;
+    private static AtomicReference<Integer> mNavBarSpaceRef;
 
     public NavigationBarInflaterView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -164,6 +165,7 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
         mOverviewProxyService = Dependency.get(OverviewProxyService.class);
         mListener = new Listener(this);
         mNavBarMode = Dependency.get(NavigationModeController.class).addListener(mListener);
+        mNavBarSpaceRef = new AtomicReference<>(0);
     }
 
     @VisibleForTesting
@@ -210,6 +212,7 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
         if (mNavBarMode != mode) {
             mNavBarMode = mode;
             updateHint();
+            updateSpace();
             onLikelyDefaultLayoutChange(false);
         }
     }
@@ -224,12 +227,10 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
         Dependency.get(TunerService.class).addTunable(this, GESTURE_NAVBAR_RADIUS);
         Dependency.get(TunerService.class).addTunable(this, ENABLE_TASKBAR);
         Dependency.get(TunerService.class).addTunable(this, KEY_NAVIGATION_SPACE);
-        mIsAttachedToWindow = true;
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        mIsAttachedToWindow = false;
         Dependency.get(NavigationModeController.class).removeListener(mListener);
         Dependency.get(TunerService.class).removeTunable(this);
         super.onDetachedFromWindow();
@@ -256,28 +257,11 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
             mIsTaskbarEnabled =
                 TunerService.parseIntegerSwitch(newValue, isLargeScreen(mContext));
             updateHint();
-        } else if (mIsAttachedToWindow &&
-                mNavBarMode == NAV_BAR_MODE_GESTURAL && KEY_NAVIGATION_SPACE.equals(key)) {
-            int state = TunerService.parseInteger(newValue, 0);
-            String overlay = NAV_BAR_MODE_GESTURAL_OVERLAY;
-            switch (state) {
-                case 1:  // narrow
-                    overlay += "_narrow_back";
-                    break;
-                case 2:  // hidden
-                    overlay += "_wide_back";
-            }
-
-            try {
-                int userId = ActivityManager.getCurrentUser();
-                IOverlayManager om = IOverlayManager.Stub.asInterface(
-                        ServiceManager.getService(Context.OVERLAY_SERVICE));
-                OverlayInfo info = om.getOverlayInfo(overlay, userId);
-
-                if (info != null && !info.isEnabled())
-                    om.setEnabledExclusiveInCategory(overlay, userId);
-            } catch (Exception e) {
-            }
+        } else if (KEY_NAVIGATION_SPACE.equals(key)) {
+            Integer mNavBarSpaceRefOld = mNavBarSpaceRef.get();
+            mNavBarSpaceRef.compareAndSet(mNavBarSpaceRefOld, TunerService.parseInteger(newValue, 0));
+            updateSpace();
+            onLikelyDefaultLayoutChange(true);
         }
     }
 
@@ -361,6 +345,46 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
         } catch (IllegalArgumentException | RemoteException e) {
             Log.e(TAG, "Failed to " + (state ? "enable" : "disable")
                     + " overlay " + OVERLAY_NAVIGATION_HIDE_HINT + " for user " + userId);
+        }
+    }
+
+    private void updateSpace() {
+        final String overlayNarrow = NAV_BAR_MODE_GESTURAL_OVERLAY + "_narrow_space";
+        final String overlayNoSpace = NAV_BAR_MODE_GESTURAL_OVERLAY + "_no_space";
+        final int type = mNavBarSpaceRef.get();
+        final boolean state = mNavBarMode == NAV_BAR_MODE_GESTURAL;
+
+        switch (type) {
+            case 1:  // narrow
+                enableOverlay(overlayNarrow, state);
+                enableOverlay(overlayNoSpace, false);
+                return;
+            case 2:  // hidden
+                enableOverlay(overlayNarrow, false);
+                enableOverlay(overlayNoSpace, state);
+                return;
+        }
+
+        enableOverlay(overlayNarrow, false);
+        enableOverlay(overlayNoSpace, false);
+    }
+
+    private void enableOverlay(String overlay, boolean state) {
+        final IOverlayManager iom = IOverlayManager.Stub.asInterface(
+                ServiceManager.getService(Context.OVERLAY_SERVICE));
+        final int userId = ActivityManager.getCurrentUser();
+        try {
+            final OverlayInfo info = iom.getOverlayInfo(overlay, userId);
+            if (info == null || info.isEnabled() == state) return;
+            iom.setEnabled(overlay, state, userId);
+            if (state) {
+                // As overlays are also used to apply navigation mode, it is needed to set
+                // our customization overlay to highest priority to ensure it is applied.
+                iom.setHighestPriority(overlay, userId);
+            }
+        } catch (IllegalArgumentException | RemoteException e) {
+            Log.e(TAG, "Failed to " + (state ? "enable" : "disable")
+                    + " overlay " + overlay + " for user " + userId);
         }
     }
 
