@@ -1269,42 +1269,41 @@ public class KeyguardIndicationController {
         }
 
         String batteryInfo = "";
-        boolean showbatteryInfo = Settings.System.getIntForUser(mContext.getContentResolver(),
+        boolean showBatteryInfo = Settings.System.getIntForUser(mContext.getContentResolver(),
             Settings.System.LOCKSCREEN_BATTERY_INFO, 1, UserHandle.USER_CURRENT) == 1;
-         if (showbatteryInfo) {
-            if (mChargingCurrent >= mCurrentDivider * 1000) {
-                batteryInfo = String.format("%.1f" , (mChargingCurrent / mCurrentDivider / 1000)) + "A";
-            } else if (mChargingCurrent > 0) {
-                batteryInfo = String.format("%.0f" , (mChargingCurrent / mCurrentDivider)) + "mA";
+        if (showBatteryInfo) {
+            if (mCurrentDivider != 0 && mChargingCurrent >= mCurrentDivider * 1000) {
+                float chargingCurrentInAmps = (float) (mChargingCurrent / (mCurrentDivider * 1000));
+                batteryInfo = String.format("%.1fA", chargingCurrentInAmps);
+            } else if (mCurrentDivider != 0 && mChargingCurrent > 0) {
+                float chargingCurrentInMilliamps = (float) (mChargingCurrent / mCurrentDivider);
+                batteryInfo = String.format("%.0f mA", chargingCurrentInMilliamps);
             }
-            if (mChargingWattage > 0) {
-                batteryInfo = (batteryInfo == "" ? "" : batteryInfo + " · ") +
-                        String.format("%.1f" , (mChargingWattage / mCurrentDivider / 1000)) + "W";
+            if (mCurrentDivider != 0 && mChargingWattage > 0) {
+                float chargingWattageInWatts = (float) (mChargingWattage / (mCurrentDivider * 1000));
+                batteryInfo += " · " + String.format("%.1fW", chargingWattageInWatts);
             }
             if (mChargingVoltage > 0) {
-                batteryInfo = (batteryInfo == "" ? "" : batteryInfo + " · ") +
-                        String.format("%.1f", (mChargingVoltage / 1000 / 1000)) + "V";
+                float chargingVoltageInVolts = (float) (mChargingVoltage / 1000000);
+                batteryInfo += " · " + String.format("%.1fV", chargingVoltageInVolts);
             }
             if (mTemperature > 0) {
-                batteryInfo = (batteryInfo == "" ? "" : batteryInfo + " · ") +
-                        String.format("%.1f", (mTemperature / 10)) + "°C";
-            }
-            if (batteryInfo != "") {
-                batteryInfo = "\n" + batteryInfo;
+                float temperatureInCelsius = (float) (mTemperature / 10);
+                batteryInfo += " · " + String.format("%.1f°C", temperatureInCelsius);
             }
         }
 
         String percentage = NumberFormat.getPercentInstance().format(mBatteryLevel / 100f);
+        String chargingText;
         if (hasChargingTime) {
             String chargingTimeFormatted = Formatter.formatShortElapsedTimeRoundingUpToMinutes(
-                    mContext, mChargingTimeRemaining);
-            String chargingText = mContext.getResources().getString(chargingId, chargingTimeFormatted,
-                    percentage);
-            return chargingText + batteryInfo;
+                mContext, mChargingTimeRemaining);
+            chargingText = mContext.getResources().getString(chargingId, chargingTimeFormatted, percentage);
         } else {
-            String chargingText =  mContext.getResources().getString(chargingId, percentage);
-            return chargingText + batteryInfo;
+            chargingText =  mContext.getResources().getString(chargingId, percentage);
         }
+
+        return batteryInfo.isEmpty() ? chargingText : chargingText + "\n" + batteryInfo;
     }
 
     public void setStatusBarKeyguardViewManager(
