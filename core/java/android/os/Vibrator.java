@@ -692,6 +692,9 @@ public abstract class Vibrator {
         int[] durations = new int[primitiveIds.length];
         for (int i = 0; i < primitiveIds.length; i++) {
             durations[i] = info.getPrimitiveDuration(primitiveIds[i]);
+            if (durations[i] == 0) {
+                durations[i] = 1;
+            }
         }
         return durations;
     }
