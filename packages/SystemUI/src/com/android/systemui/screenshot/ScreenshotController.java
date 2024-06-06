@@ -124,6 +124,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Consumer;
 
 import javax.inject.Provider;
@@ -351,7 +352,10 @@ public class ScreenshotController {
     private final TaskStackChangeListener mTaskListener = new TaskStackChangeListener() {
         @Override
         public void onTaskStackChanged() {
-            mBgExecutor.execute(() -> updateForegroundTaskSync());
+            try {
+                mBgExecutor.execute(() -> updateForegroundTaskSync());
+            } catch (RejectedExecutionException e) {
+            }
         }
     };
 
