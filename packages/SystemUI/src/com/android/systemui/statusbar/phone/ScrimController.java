@@ -84,6 +84,7 @@ import com.android.systemui.statusbar.notification.stack.ViewState;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.AlarmTimeout;
+import com.android.systemui.util.MediaArtUtils;
 import com.android.systemui.util.kotlin.JavaAdapter;
 import com.android.systemui.util.wakelock.DelayedWakeLock;
 import com.android.systemui.util.wakelock.WakeLock;
@@ -1194,6 +1195,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
                         AlarmTimeout.MODE_IGNORE_IF_SCHEDULED);
             });
         }
+        MediaArtUtils.getInstance(mScrimBehind.getContext()).updateMediaArtVisibility();
     }
 
     /**
