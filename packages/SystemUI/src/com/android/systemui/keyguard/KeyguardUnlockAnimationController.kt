@@ -686,13 +686,13 @@ class KeyguardUnlockAnimationController @Inject constructor(
                     true /* unlocked */,
                     LAUNCHER_ICONS_ANIMATION_DURATION_MS /* duration */,
                     cannedUnlockStartDelayMs() /* startDelay */)
-        } catch (e: DeadObjectException) {
+        } catch (e: Exception) {
             // Hello! If you are here investigating a bug where Launcher is blank (no icons)
             // then the below assumption about Launcher's destruction was incorrect. This
             // would mean prepareToUnlock was called (blanking Launcher in preparation for
             // the beginning of the unlock animation), but then somehow we were unable to
             // call playUnlockAnimation to animate the icons back in.
-            Log.e(TAG, "launcherUnlockAnimationController was dead, but non-null. " +
+            Log.d(TAG, "launcherUnlockAnimationController was dead, but non-null. " +
                     "Catching exception as this should mean Launcher is in the process " +
                     "of being destroyed, but the IPC to System UI telling us hasn't " +
                     "arrived yet.")
