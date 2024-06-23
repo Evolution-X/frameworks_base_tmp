@@ -2903,14 +2903,8 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (mRow.ss == null) return;
-            if (getActiveRow().equals(mRow)
-                    && mRow.slider.getVisibility() == VISIBLE
-                    && mRow.mHapticPlugin != null && mHapticsEnabled) {
-                mRow.mHapticPlugin.onProgressChanged(seekBar, progress, fromUser);
-                if (!fromUser) {
-                    // Consider a change from program as the volume key being continuously pressed
-                    mRow.mHapticPlugin.onKeyDown();
-                }
+            if (mHapticsEnabled) {
+                seekBar.performHapticFeedback(VibrationEffect.EFFECT_TEXTURE_TICK);
             }
             if (D.BUG) Log.d(TAG, AudioSystem.streamToString(mRow.stream)
                     + " onProgressChanged " + progress + " fromUser=" + fromUser);
@@ -2939,8 +2933,8 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         public void onStartTrackingTouch(SeekBar seekBar) {
             if (D.BUG) Log.d(TAG, "onStartTrackingTouch"+ " " + mRow.stream);
             Events.writeEvent(Events.EVENT_SLIDER_TOUCH_TRACKING, /* startedTracking= */true);
-            if (mRow.mHapticPlugin != null) {
-                mRow.mHapticPlugin.onStartTrackingTouch(seekBar);
+            if (mHapticsEnabled) {
+                seekBar.performHapticFeedback(VibrationEffect.EFFECT_TEXTURE_TICK);
             }
             mController.setActiveStream(mRow.stream);
             mRow.tracking = true;
@@ -2950,9 +2944,6 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         public void onStopTrackingTouch(SeekBar seekBar) {
             if (D.BUG) Log.d(TAG, "onStopTrackingTouch"+ " " + mRow.stream);
             Events.writeEvent(Events.EVENT_SLIDER_TOUCH_TRACKING, /* startedTracking= */false);
-            if (mRow.mHapticPlugin != null) {
-                mRow.mHapticPlugin.onStopTrackingTouch(seekBar);
-            }
             mRow.tracking = false;
             mRow.userAttempt = SystemClock.uptimeMillis();
             final int userLevel = getImpliedLevel(seekBar, seekBar.getProgress());
