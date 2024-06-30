@@ -189,6 +189,8 @@ class Transition implements BLASTSyncEngine.TransactionReadyListener {
     private final BLASTSyncEngine mSyncEngine;
     private final Token mToken;
 
+    private final PowerManagerInternal mPowerManagerInternal;
+
     private @Nullable ActivityRecord mPipActivity;
 
     /** Only use for clean-up after binder death! */
@@ -354,6 +356,8 @@ class Transition implements BLASTSyncEngine.TransactionReadyListener {
 
         mLogger.mCreateWallTimeMs = System.currentTimeMillis();
         mLogger.mCreateTimeNs = SystemClock.elapsedRealtimeNanos();
+
+        mPowerManagerInternal = LocalServices.getService(PowerManagerInternal.class);
     }
 
     @Nullable
@@ -715,7 +719,6 @@ class Transition implements BLASTSyncEngine.TransactionReadyListener {
     }
 
     protected void doActivityBoost() {
-        PowerManagerInternal mPowerManagerInternal = LocalServices.getService(PowerManagerInternal.class);
         if (mPowerManagerInternal != null) {
             mPowerManagerInternal.setPowerBoost(Boost.DISPLAY_UPDATE_IMMINENT, 80);
         }
