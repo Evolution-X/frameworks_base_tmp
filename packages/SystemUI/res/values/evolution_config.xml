@@ -42,4 +42,7 @@
 
     <!-- Preferred max refresh rate at AOD & Ambient Display, if supported by the display. -->
     <integer name="config_aodMaxRefreshRate">-1</integer>
+
+    <!-- Whether to enable HEVC toggle for screenrecord -->
+    <bool name="config_screenRecordHEVC">true</bool>
 </resources>
