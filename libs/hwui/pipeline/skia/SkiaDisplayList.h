@@ -174,6 +174,7 @@ public:
     std::deque<FunctorDrawable*> mChildFunctors;
     std::vector<SkImage*> mMutableImages;
     std::vector<std::shared_ptr<const MeshBufferData>> mMeshBufferData;
+    std::vector<SkImage*> mMutableBitmapShaderImages;
 
 private:
     std::vector<Pair<VectorDrawableRoot*, SkMatrix>> mVectorDrawables;
