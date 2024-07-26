@@ -899,7 +899,7 @@ public class ImageReader implements AutoCloseable {
             throw new IllegalStateException("Image was already detached from this ImageReader");
         }
 
-        nativeDetachImage(image, mDetachThrowsIseOnly);
+        // nativeDetachImage(image, mDetachThrowsIseOnly);
         si.clearSurfacePlanes();
         si.mPlanes = null;
         si.setDetached(true);
