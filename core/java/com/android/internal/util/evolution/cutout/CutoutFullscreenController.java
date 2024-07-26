@@ -36,31 +36,17 @@ public class CutoutFullscreenController {
     private Set<String> mApps = new HashSet<>();
     private Context mContext;
 
-    private final boolean isAvailable;
-
     public CutoutFullscreenController(Context context) {
         mContext = context;
         final Resources resources = mContext.getResources();
-
-	    final String displayCutout = 
-	            resources.getString(com.android.internal.R.string.config_mainBuiltInDisplayCutout);
-        isAvailable = !TextUtils.isEmpty(displayCutout);
-
-        if (!isAvailable) {
-            return;
-        }
 
         SettingsObserver observer = new SettingsObserver(
                 new Handler(Looper.getMainLooper()));
         observer.observe();
     }
 
-    public boolean isSupported() {
-        return isAvailable;
-    }
-
     public boolean shouldForceCutoutFullscreen(String packageName) {
-        return isSupported() && (mApps.contains(packageName)
+        return (mApps.contains(packageName)
                 || packageName.contains("dialer")
                 || packageName.contains("android.settings")
                 || packageName.contains("com.spotify.music"));
