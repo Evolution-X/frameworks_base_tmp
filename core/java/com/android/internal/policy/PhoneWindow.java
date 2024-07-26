@@ -136,6 +136,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.internal.util.evolution.cutout.CutoutUtils;
+
 /**
  * Android-specific Window.
  * <p>
@@ -2642,7 +2644,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             params.layoutInDisplayCutoutMode = mode;
         }
 
-        if (ActivityManager.isSystemReady()) {
+        if (CutoutUtils.hasCutout(context) && ActivityManager.isSystemReady()) {
             try {
                 String packageName = context.getBasePackageName();
                 if (ActivityManager.getService().shouldForceCutoutFullscreen(packageName)){
