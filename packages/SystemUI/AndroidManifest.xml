@@ -443,6 +443,14 @@
                 <action android:name="com.android.systemui.screenshot.SHOW_ERROR" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name=".PocketStateReceiver"
+            android:process=":pocketmode"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="org.rising.server.action.POCKET_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <activity android:name=".screenshot.LongScreenshotActivity"
                   android:theme="@style/LongScreenshotActivity"

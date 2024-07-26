@@ -38,6 +38,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.telecom.TelecomManager;
 import android.provider.Settings;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -54,6 +55,9 @@ public class PocketModeService extends SystemService {
     private static final float GRAVITY_THRESHOLD = -0.6f;
     private static final int MIN_INCLINATION = 75;
     private static final int MAX_INCLINATION = 100;
+
+    public static final String ACTION_POCKET_STATE_CHANGED = "org.rising.server.action.POCKET_STATE_CHANGED";
+    public static final String EXTRA_IN_POCKET = "in_pocket";
     
     private static final long DISPLAY_OFF_DELAY = 3000;
     private Handler mDisplayOffHandler = new Handler();
@@ -108,7 +112,6 @@ public class PocketModeService extends SystemService {
     
     private boolean mPocketModeEnabled;
     private boolean mAlwaysOnPocketModeEnabled;
-    private boolean mIsDozing = false;
 
     private PocketModeService(Context context) {
         super(context);
@@ -123,9 +126,23 @@ public class PocketModeService extends SystemService {
         }
         return instance;
     }
-    
-    public void setDozeState(boolean dozing) {
-        mIsDozing = dozing;
+
+    private void sendPocketStateChangedBroadcast(boolean inPocket) {
+        Intent intent = new Intent(ACTION_POCKET_STATE_CHANGED);
+        intent.setPackage("com.android.systemui");
+        intent.putExtra(EXTRA_IN_POCKET, inPocket);
+        mContext.sendBroadcast(intent);
+    }
+
+    private boolean isDozing() {
+        Display display = mContext.getDisplay();
+        if (display != null) {
+            int state = display.getState();
+            return state == Display.STATE_DOZE 
+                || state == Display.STATE_DOZE_SUSPEND
+                || state == Display.STATE_ON_SUSPEND;
+        }
+        return false;
     }
     
     private boolean isAlwaysOnPocketMode() {
@@ -169,7 +186,7 @@ public class PocketModeService extends SystemService {
     }
 
     private void showOverlay() {
-        if (mIsDozing) return;
+        if (isDozing()) return;
         final Runnable show = new Runnable() {
             @Override
             public void run() {
@@ -180,6 +197,7 @@ public class PocketModeService extends SystemService {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
                     mShowing = true;
                     startDisplayOffTimer();
+                    sendPocketStateChangedBroadcast(true);
                 }
             }
         };
@@ -195,6 +213,7 @@ public class PocketModeService extends SystemService {
                     mWindowManager.removeView(mOverlayView);
                     mShowing = false;
                     cancelDisplayOffTimer();
+                    sendPocketStateChangedBroadcast(false);
                 }
             }
         };
