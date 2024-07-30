@@ -52,6 +52,7 @@ void DrawFrameTask::pushLayerUpdate(DeferredLayerUpdater* layer) {
     LOG_ALWAYS_FATAL_IF(!mContext,
                         "Lifecycle violation, there's no context to pushLayerUpdate with!");
 
+    android::Mutex::Autolock _l(mLayerMutex);
     for (size_t i = 0; i < mLayers.size(); i++) {
         if (mLayers[i].get() == layer) {
             return;
@@ -61,6 +62,7 @@ void DrawFrameTask::pushLayerUpdate(DeferredLayerUpdater* layer) {
 }
 
 void DrawFrameTask::removeLayerUpdate(DeferredLayerUpdater* layer) {
+    android::Mutex::Autolock _l(mLayerMutex);
     for (size_t i = 0; i < mLayers.size(); i++) {
         if (mLayers[i].get() == layer) {
             mLayers.erase(mLayers.begin() + i);
@@ -176,13 +178,16 @@ bool DrawFrameTask::syncFrameState(TreeInfo& info) {
     bool canDraw = mContext->makeCurrent();
     mContext->unpinImages();
 
-    for (size_t i = 0; i < mLayers.size(); i++) {
-        if (mLayers[i]) {
-            mLayers[i]->apply();
+    {
+        android::Mutex::Autolock _l(mLayerMutex);
+        for (size_t i = 0; i < mLayers.size(); i++) {
+            if (mLayers[i]) {
+                mLayers[i]->apply();
+            }
         }
+        mLayers.clear();
     }
 
-    mLayers.clear();
     mContext->setContentDrawBounds(mContentDrawBounds);
     mContext->prepareTree(info, mFrameInfo, mSyncQueued, mTargetNode);
 

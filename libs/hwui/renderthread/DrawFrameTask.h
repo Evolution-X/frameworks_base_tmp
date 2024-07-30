@@ -108,6 +108,7 @@ private:
     void unblockUiThread();
 
     Mutex mLock;
+    mutable Mutex mLayerMutex;
     Condition mSignal;
 
     RenderThread* mRenderThread;
