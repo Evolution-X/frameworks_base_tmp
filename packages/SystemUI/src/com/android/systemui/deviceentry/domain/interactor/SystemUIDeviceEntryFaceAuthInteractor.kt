@@ -87,6 +87,8 @@ constructor(
 ) : CoreStartable, DeviceEntryFaceAuthInteractor {
 
     private val listeners: MutableList<FaceAuthenticationListener> = mutableListOf()
+    
+    private var isDeviceInPocket = false
 
     override fun start() {
         // Todo(b/310594096): there is a dependency cycle introduced by the repository depending on
@@ -256,7 +258,7 @@ constructor(
 
     override fun isRunning(): Boolean = repository.isAuthRunning.value
 
-    override fun canFaceAuthRun(): Boolean = repository.canRunFaceAuth.value
+    override fun canFaceAuthRun(): Boolean = !isDeviceInPocket && repository.canRunFaceAuth.value
 
     override fun isFaceAuthStrong(): Boolean =
         facePropertyRepository.sensorInfo.value?.strength == SensorStrength.STRONG
@@ -272,8 +274,13 @@ constructor(
 
     /** Provide the status of face detection */
     override val detectionStatus = repository.detectionStatus
+    
+    override fun setPocketState(isInPocket: Boolean) {
+        this.isDeviceInPocket = isInPocket
+    }
 
     private fun runFaceAuth(uiEvent: FaceAuthUiEvent, fallbackToDetect: Boolean) {
+        if (isDeviceInPocket) return
         faceAuthenticationStatusOverride.value = null
         faceAuthenticationLogger.authRequested(uiEvent)
         repository.requestAuthenticate(uiEvent, fallbackToDetection = fallbackToDetect)

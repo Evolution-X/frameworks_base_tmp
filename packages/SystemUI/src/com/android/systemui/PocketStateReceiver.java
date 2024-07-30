@@ -29,7 +29,13 @@ public class PocketStateReceiver extends BroadcastReceiver {
 
     private PocketStateListener mListener;
 
+    public PocketStateReceiver() {}
+
     public PocketStateReceiver(PocketStateListener listener) {
+        this.mListener = listener;
+    }
+
+    public void setListener(PocketStateListener listener) {
         this.mListener = listener;
     }
 

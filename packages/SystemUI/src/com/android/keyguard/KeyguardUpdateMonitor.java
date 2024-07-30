@@ -181,7 +181,7 @@ import javax.inject.Provider;
  * to be updated.
  */
 @SysUISingleton
-public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpable, CoreStartable, PocketStateReceiver.PocketStateListener {
+public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpable, CoreStartable {
 
     private static final String TAG = "KeyguardUpdateMonitor";
     private static final int BIOMETRIC_LOCKOUT_RESET_DELAY_MS = 600;
@@ -2210,7 +2210,14 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         mFingerprintInteractiveToAuthProvider = interactiveToAuthProvider.orElse(null);
         mIsSystemUser = mUserManager.isSystemUser();
         
-        mPocketStateReceiver = new PocketStateReceiver(this);
+        mPocketStateReceiver = new PocketStateReceiver();
+        mPocketStateReceiver.setListener(new PocketStateReceiver.PocketStateListener() {
+            @Override
+            public void onPocketStateChanged(boolean isInPocket) {
+                mIsDeviceInPocket = isInPocket;
+                getFaceAuthInteractor().setPocketState(mIsDeviceInPocket);
+            }
+        });
         mPocketStateReceiver.register(context);
 
         mHandler = new Handler(mainLooper) {
@@ -2818,11 +2825,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private boolean shouldTriggerActiveUnlockForAssistant() {
         return mAssistantVisible && mKeyguardOccluded
                 && !mUserHasTrust.get(mSelectedUserInteractor.getSelectedUserId(), false);
-    }
-
-    @Override
-    public void onPocketStateChanged(boolean isInPocket) {
-        mIsDeviceInPocket = isInPocket;
     }
 
     @VisibleForTesting
