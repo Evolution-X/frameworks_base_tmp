@@ -84,8 +84,14 @@ import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST;
 import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_STARTING;
 import static android.view.WindowManager.LayoutParams.TYPE_INPUT_METHOD;
+import static android.view.WindowManager.LayoutParams.TYPE_INPUT_METHOD_DIALOG;
+import static android.view.WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG;
+import static android.view.WindowManager.LayoutParams.TYPE_NAVIGATION_BAR;
+import static android.view.WindowManager.LayoutParams.TYPE_NAVIGATION_BAR_PANEL;
+import static android.view.WindowManager.LayoutParams.TYPE_STATUS_BAR;
 import static android.view.WindowManager.LayoutParams.TYPE_STATUS_BAR_ADDITIONAL;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
 import static android.view.WindowManager.LayoutParams.TYPE_TOAST;
 import static android.view.WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
 import static android.view.WindowManager.PROPERTY_COMPAT_ALLOW_SANDBOXING_VIEW_BOUNDS_APIS;
@@ -259,6 +265,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -294,6 +301,19 @@ public final class ViewRootImpl implements ViewParent,
     private static final boolean DEBUG_BLAST = false || LOCAL_LOGV;
     private static final int LOGTAG_INPUT_FOCUS = 62001;
     private static final int LOGTAG_VIEWROOT_DRAW_EVENT = 60004;
+
+    private static final Set<Integer> NO_VOTE_WINDOW_TYPES = Set.of(
+        TYPE_INPUT_METHOD,
+        TYPE_INPUT_METHOD_DIALOG,
+        TYPE_KEYGUARD_DIALOG,
+        TYPE_NAVIGATION_BAR,
+        TYPE_NAVIGATION_BAR_PANEL,
+        TYPE_STATUS_BAR,
+        TYPE_SYSTEM_ALERT,
+        TYPE_SYSTEM_DIALOG,
+        TYPE_TOAST,
+        TYPE_VOLUME_OVERLAY
+    );
 
     /**
      * Set to false if we do not want to use the multi threaded renderer even though
@@ -3156,6 +3176,10 @@ public final class ViewRootImpl implements ViewParent,
         return (int) (displayMetrics.density * dip + 0.5f);
     }
 
+    private boolean isNoVoteWindowType() {
+        return NO_VOTE_WINDOW_TYPES.contains(mWindowAttributes.type);
+    }
+
     private void performTraversals() {
         mLastPerformTraversalsSkipDrawReason = null;
 
@@ -3498,9 +3522,7 @@ public final class ViewRootImpl implements ViewParent,
                     if (surfaceControlChanged && mDisplayDecorationCached) {
                         updateDisplayDecoration();
                     }
-                    if (surfaceControlChanged
-                            && mWindowAttributes.type
-                            == WindowManager.LayoutParams.TYPE_STATUS_BAR) {
+                    if (surfaceControlChanged && isNoVoteWindowType()) {
                         mTransaction.setDefaultFrameRateCompatibility(mSurfaceControl,
                             Surface.FRAME_RATE_COMPATIBILITY_NO_VOTE).apply();
                     }
