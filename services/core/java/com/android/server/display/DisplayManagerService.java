@@ -180,6 +180,8 @@ import com.android.server.utils.FoldSettingProvider;
 import com.android.server.wm.SurfaceAnimationThread;
 import com.android.server.wm.WindowManagerInternal;
 
+import com.libremobileos.freeform.ILMOFreeformDisplayCallback;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -534,6 +536,8 @@ public final class DisplayManagerService extends SystemService {
     // If we would like to keep a particular eye on a package, we can set the package name.
     private final boolean mExtraDisplayEventLogging;
     private final String mExtraDisplayLoggingPackageName;
+
+    private LMOFreeformDisplayAdapter mFreeformDisplayAdapter;
 
     private final BroadcastReceiver mIdleModeReceiver = new BroadcastReceiver() {
         @Override
@@ -2054,6 +2058,7 @@ public final class DisplayManagerService extends SystemService {
             if (shouldRegisterNonEssentialDisplayAdaptersLocked()) {
                 registerOverlayDisplayAdapterLocked();
                 registerWifiDisplayAdapterLocked();
+                registerFreeformDisplayAdapterLocked();
             }
         }
     }
@@ -2072,6 +2077,13 @@ public final class DisplayManagerService extends SystemService {
                     mPersistentDataStore, mFlags);
             registerDisplayAdapterLocked(mWifiDisplayAdapter);
         }
+    }
+
+    private void registerFreeformDisplayAdapterLocked() {
+        mFreeformDisplayAdapter = new LMOFreeformDisplayAdapter(
+                mSyncRoot, mContext, mHandler, mDisplayDeviceRepo, mLogicalDisplayMapper,
+                mUiHandler, mFlags);
+        registerDisplayAdapterLocked(mFreeformDisplayAdapter);
     }
 
     private boolean shouldRegisterNonEssentialDisplayAdaptersLocked() {
@@ -5348,6 +5360,23 @@ public final class DisplayManagerService extends SystemService {
         @Override
         public void onPresentation(int displayId, boolean isShown) {
             mExternalDisplayPolicy.onPresentation(displayId, isShown);
+        }
+
+        public void createFreeformLocked(String name, ILMOFreeformDisplayCallback callback,
+                int width, int height, int densityDpi, boolean secure, boolean ownContentOnly,
+                boolean shouldShowSystemDecorations, Surface surface, float refreshRate,
+                long presentationDeadlineNanos) {
+            mFreeformDisplayAdapter.createFreeformLocked(name, callback, width, height, densityDpi,
+                    secure, ownContentOnly, shouldShowSystemDecorations, surface, refreshRate,
+                    presentationDeadlineNanos);
+        }
+
+        public void resizeFreeform(IBinder appToken, int width, int height, int densityDpi) {
+            mFreeformDisplayAdapter.resizeFreeform(appToken, width, height, densityDpi);
+        }
+
+        public void releaseFreeform(IBinder appToken) {
+            mFreeformDisplayAdapter.releaseFreeform(appToken);
         }
     }
 
