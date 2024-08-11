@@ -111,7 +111,15 @@ class RefreshRateTile @Inject constructor(
 
     override fun getLongClickIntent() = displaySettingsIntent
 
-    override fun isAvailable() = mContext.resources.getBoolean(R.bool.config_showRefreshRateQsTile)
+    override fun isAvailable(): Boolean {
+        val displayManager = mContext.getSystemService(DisplayManager::class.java)
+        val display: Display? = displayManager?.getDisplay(Display.DEFAULT_DISPLAY)
+        display?.let {
+            val supportedRefreshRates = it.supportedModes.map { mode -> mode.refreshRate }.distinct()
+            return supportedRefreshRates.size > 1
+        }
+        return false
+    }
 
     override fun getTileLabel(): CharSequence = tileLabel
 
