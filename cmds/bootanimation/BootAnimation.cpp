@@ -72,12 +72,19 @@ using ui::DisplayMode;
 static const char OEM_BOOTANIMATION_FILE[] = "/oem/media/bootanimation.zip";
 static const char PRODUCT_BOOTANIMATION_DIR[] = "/product/media/";
 static const char PRODUCT_BOOTANIMATION_DARK_FILE[] = "bootanimation-dark.zip";
-static const char PRODUCT_BOOTANIMATION_FILE[] = "bootanimation.zip";
 static const char SYSTEM_BOOTANIMATION_FILE[] = "/system/media/bootanimation.zip";
 static const char APEX_BOOTANIMATION_FILE[] = "/apex/com.android.bootanimation/etc/bootanimation.zip";
 static const char OEM_SHUTDOWNANIMATION_FILE[] = "/oem/media/shutdownanimation.zip";
 static const char PRODUCT_SHUTDOWNANIMATION_FILE[] = "/product/media/shutdownanimation.zip";
 static const char SYSTEM_SHUTDOWNANIMATION_FILE[] = "/system/media/shutdownanimation.zip";
+
+static const char* const BOOT_ANIMATION_FILES[] = {
+    "/product/media/bootanimation.zip",
+    "/product/media/bootanimation_cyberpunk.zip",
+    "/product/media/bootanimation_google.zip",
+    "/product/media/bootanimation_google_monet.zip",
+    "/product/media/bootanimation_valorant.zip"
+};
 
 static constexpr const char* PRODUCT_USERSPACE_REBOOT_ANIMATION_FILE = "/product/media/userspace-reboot.zip";
 static constexpr const char* OEM_USERSPACE_REBOOT_ANIMATION_FILE = "/oem/media/userspace-reboot.zip";
@@ -766,12 +773,10 @@ bool BootAnimation::findBootAnimationFileInternal(const std::vector<std::string>
 
 void BootAnimation::findBootAnimationFile() {
     ATRACE_CALL();
-    const bool playDarkAnim = false;
-    const std::string productBootanimationFile = PRODUCT_BOOTANIMATION_DIR +
-        android::base::GetProperty("ro.product.bootanim.file", playDarkAnim ?
-        PRODUCT_BOOTANIMATION_DARK_FILE : PRODUCT_BOOTANIMATION_FILE);
+    const int bootAnimStyle = android::base::GetIntProperty("persist.sys.bootanimation_style", 0);
+    const char* selectedBootAnimation = (bootAnimStyle >= 0 && bootAnimStyle < 5) ? BOOT_ANIMATION_FILES[bootAnimStyle] : BOOT_ANIMATION_FILES[0];
     static const std::vector<std::string> bootFiles = {
-        APEX_BOOTANIMATION_FILE, productBootanimationFile,
+        APEX_BOOTANIMATION_FILE, std::string(selectedBootAnimation),
         OEM_BOOTANIMATION_FILE, SYSTEM_BOOTANIMATION_FILE
     };
     static const std::vector<std::string> shutdownFiles = {
