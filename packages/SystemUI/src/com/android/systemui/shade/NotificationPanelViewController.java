@@ -5400,7 +5400,9 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
 
     @Override
     public void showIsland(boolean show) {
-        if (useIslandNotification() && mUseHeadsUp) {
+        // if landNotify is showing, it must disappear for a while      -- alphi-wang-cn
+        if (/* must dismiss if not show! */ !show
+                || useIslandNotification() && mUseHeadsUp) {
             mNotifIsland.showIsland(show, getExpandedFraction());
         }
     }
