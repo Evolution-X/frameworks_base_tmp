@@ -80,9 +80,12 @@ static const char SYSTEM_SHUTDOWNANIMATION_FILE[] = "/system/media/shutdownanima
 
 static const char* const BOOT_ANIMATION_FILES[] = {
     "/product/media/bootanimation.zip",
+    "/product/media/bootanimation_evo_anniv.zip",
+    "/product/media/bootanimation_cm.zip",
     "/product/media/bootanimation_cyberpunk.zip",
     "/product/media/bootanimation_google.zip",
     "/product/media/bootanimation_google_monet.zip",
+    "/product/media/bootanimation_rr.zip",
     "/product/media/bootanimation_valorant.zip",
     "/data/misc/bootanim/bootanimation.zip"
 };
