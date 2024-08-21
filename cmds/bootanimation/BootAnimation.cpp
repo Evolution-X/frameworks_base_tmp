@@ -774,11 +774,15 @@ bool BootAnimation::findBootAnimationFileInternal(const std::vector<std::string>
 
 void BootAnimation::findBootAnimationFile() {
     ATRACE_CALL();
-    const int bootAnimStyle = android::base::GetIntProperty("persist.sys.bootanimation_style", 0);
-    const char* selectedBootAnimation = (bootAnimStyle >= 0 && bootAnimStyle < 6) ? BOOT_ANIMATION_FILES[bootAnimStyle] : BOOT_ANIMATION_FILES[0];
+    char value[PROPERTY_VALUE_MAX];
+    property_get("persist.sys.bootanimation_style", value, "0");
+    const int bootAnimStyle = atoi(value);
+    const char* selectedBootAnimation = 
+        (bootAnimStyle >= 0 && bootAnimStyle < 6) 
+        ? BOOT_ANIMATION_FILES[bootAnimStyle] 
+        : BOOT_ANIMATION_FILES[0];
     static const std::vector<std::string> bootFiles = {
-        APEX_BOOTANIMATION_FILE, std::string(selectedBootAnimation),
-        OEM_BOOTANIMATION_FILE, SYSTEM_BOOTANIMATION_FILE
+        std::string(selectedBootAnimation)
     };
     static const std::vector<std::string> shutdownFiles = {
         PRODUCT_SHUTDOWNANIMATION_FILE, OEM_SHUTDOWNANIMATION_FILE, SYSTEM_SHUTDOWNANIMATION_FILE, ""
