@@ -82,7 +82,8 @@ static const char* const BOOT_ANIMATION_FILES[] = {
     "/product/media/bootanimation_cyberpunk.zip",
     "/product/media/bootanimation_google.zip",
     "/product/media/bootanimation_google_monet.zip",
-    "/product/media/bootanimation_valorant.zip"
+    "/product/media/bootanimation_valorant.zip",
+    "/data/misc/bootanim/bootanimation.zip"
 };
 
 static constexpr const char* PRODUCT_USERSPACE_REBOOT_ANIMATION_FILE = "/product/media/userspace-reboot.zip";
@@ -773,7 +774,7 @@ bool BootAnimation::findBootAnimationFileInternal(const std::vector<std::string>
 void BootAnimation::findBootAnimationFile() {
     ATRACE_CALL();
     const int bootAnimStyle = android::base::GetIntProperty("persist.sys.bootanimation_style", 0);
-    const char* selectedBootAnimation = (bootAnimStyle >= 0 && bootAnimStyle < 5) ? BOOT_ANIMATION_FILES[bootAnimStyle] : BOOT_ANIMATION_FILES[0];
+    const char* selectedBootAnimation = (bootAnimStyle >= 0 && bootAnimStyle < 6) ? BOOT_ANIMATION_FILES[bootAnimStyle] : BOOT_ANIMATION_FILES[0];
     static const std::vector<std::string> bootFiles = {
         APEX_BOOTANIMATION_FILE, std::string(selectedBootAnimation),
         OEM_BOOTANIMATION_FILE, SYSTEM_BOOTANIMATION_FILE
