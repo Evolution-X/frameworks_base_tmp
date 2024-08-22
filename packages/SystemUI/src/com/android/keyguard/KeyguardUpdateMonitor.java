@@ -2215,7 +2215,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             @Override
             public void onPocketStateChanged(boolean isInPocket) {
                 mIsDeviceInPocket = isInPocket;
-                getFaceAuthInteractor().setPocketState(mIsDeviceInPocket);
+                if (getFaceAuthInteractor() != null) {
+                    getFaceAuthInteractor().setPocketState(mIsDeviceInPocket);
+                }
             }
         });
         mPocketStateReceiver.register(context);
