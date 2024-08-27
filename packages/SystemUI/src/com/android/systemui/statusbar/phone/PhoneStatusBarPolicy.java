@@ -205,7 +205,6 @@ public class PhoneStatusBarPolicy
     private NfcAdapter mAdapter;
 
     private boolean mShowBluetoothBattery;
-    private boolean mHideBluetooth;
 
     private boolean mShowNetworkTraffic;
 
@@ -298,8 +297,7 @@ public class PhoneStatusBarPolicy
 
         Dependency.get(TunerService.class).addTunable(this,
                 BLUETOOTH_SHOW_BATTERY,
-                NETWORK_TRAFFIC_LOCATION,
-                StatusBarIconController.ICON_HIDE_LIST);
+                NETWORK_TRAFFIC_LOCATION);
     }
 
     /** Initialize the object after construction. */
@@ -471,14 +469,6 @@ public class PhoneStatusBarPolicy
                         TunerService.parseInteger(newValue, 0) == 1;
                 updateNetworkTraffic();
                 break;
-            case StatusBarIconController.ICON_HIDE_LIST:
-                ArraySet<String> hideList = StatusBarIconController.getIconHideList(mContext, newValue);
-                boolean hideBluetooth = hideList.contains(mSlotBluetooth);
-                if (hideBluetooth != mHideBluetooth) {
-                    mHideBluetooth = hideBluetooth;
-                    updateBluetooth();
-                }
-                break;
             default:
                 break;
         }
@@ -609,7 +599,7 @@ public class PhoneStatusBarPolicy
         }
 
         mIconController.setBluetoothIcon(mSlotBluetooth,
-                new BluetoothIconState(!mHideBluetooth && bluetoothVisible, batteryLevel, contentDescription));
+                new BluetoothIconState(bluetoothVisible, batteryLevel, contentDescription));
     }
 
     private final void updateNetworkTraffic() {
