@@ -1487,7 +1487,7 @@ final class ActivityManagerConstants extends ContentObserver {
         } else if (roundedMemoryGB > 4 && roundedMemoryGB <= 6) {
             CUR_MAX_CACHED_PROCESSES = 48;
         } else {
-            CUR_MAX_CACHED_PROCESSES = 1024;
+            CUR_MAX_CACHED_PROCESSES = 128;
         }
     }
 
