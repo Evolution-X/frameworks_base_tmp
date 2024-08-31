@@ -67,7 +67,9 @@
 
     <dimen name="qs_brightness_margin_bottom">16dp</dimen>
 
-    <dimen name="qs_panel_padding_top">8dp</dimen>
+    <dimen name="qs_panel_padding_top">120dp</dimen>
+    <dimen name="qqs_bottom_brightness_margin_top">12dp</dimen>
+    <dimen name="qs_bottom_brightness_margin_top">20dp</dimen>
 
     <!-- The width of large/content heavy dialogs (e.g. Internet, Media output, etc) -->
     <dimen name="large_dialog_width">472dp</dimen>
