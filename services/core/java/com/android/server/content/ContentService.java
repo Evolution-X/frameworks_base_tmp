@@ -375,16 +375,12 @@ public final class ContentService extends IContentService.Stub {
         final String msg = LocalServices.getService(ActivityManagerInternal.class)
                 .checkContentProviderAccess(uri.getAuthority(), userHandle);
         if (msg != null) {
-            if (targetSdkVersion >= Build.VERSION_CODES.O) {
-                throw new SecurityException(msg);
+            if (msg.startsWith("Failed to find provider")) {
+                // Sigh, we need to quietly let apps targeting older API
+                // levels notify on non-existent providers.
             } else {
-                if (msg.startsWith("Failed to find provider")) {
-                    // Sigh, we need to quietly let apps targeting older API
-                    // levels notify on non-existent providers.
-                } else {
-                    Log.w(TAG, "Ignoring content changes for " + uri + " from " + uid + ": " + msg);
-                    return;
-                }
+                Log.w(TAG, "Ignoring content changes for " + uri + " from " + uid + ": " + msg);
+                return;
             }
         }
 
@@ -450,17 +446,13 @@ public final class ContentService extends IContentService.Stub {
                 final String msg = LocalServices.getService(ActivityManagerInternal.class)
                         .checkContentProviderAccess(uri.getAuthority(), resolvedUserId);
                 if (msg != null) {
-                    if (targetSdkVersion >= Build.VERSION_CODES.O) {
-                        throw new SecurityException(msg);
+                    if (msg.startsWith("Failed to find provider")) {
+                        // Sigh, we need to quietly let apps targeting older API
+                        // levels notify on non-existent providers.
                     } else {
-                        if (msg.startsWith("Failed to find provider")) {
-                            // Sigh, we need to quietly let apps targeting older API
-                            // levels notify on non-existent providers.
-                        } else {
-                            Log.w(TAG, "Ignoring notify for " + uri + " from "
-                                    + callingUid + ": " + msg);
-                            continue;
-                        }
+                        Log.w(TAG, "Ignoring notify for " + uri + " from "
+                                + callingUid + ": " + msg);
+                        continue;
                     }
                 }
 
