@@ -201,6 +201,8 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         mDozer = new NotificationDozeHelper();
         mBlocked = blocked;
         mSlot = slot;
+        mShowNotificationCount = Settings.System.getIntForUser(context.getContentResolver(),
+            Settings.System.STATUSBAR_NOTIF_COUNT, 0, UserHandle.USER_CURRENT) != 0;
         final float scaledPx = 8 * getResources().getDisplayMetrics().density;
         mNumberPain = new Paint();
         mNumberPain.setTextAlign(Paint.Align.CENTER);
