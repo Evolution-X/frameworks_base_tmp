@@ -316,6 +316,7 @@ final class UiModeManagerService extends SystemService {
         public void onTwilightStateChanged(@Nullable TwilightState state) {
             synchronized (mLock) {
                 if (mNightMode.get() == UiModeManager.MODE_NIGHT_AUTO && mSystemReady) {
+                    resetNightModeOverrideLocked();
                     if (shouldApplyAutomaticChangesImmediately()) {
                         updateLocked(0, 0);
                     } else {
@@ -609,6 +610,7 @@ final class UiModeManagerService extends SystemService {
 
     private void updateCustomTimeLocked() {
         if (mNightMode.get() != MODE_NIGHT_CUSTOM) return;
+        resetNightModeOverrideLocked();
         if (shouldApplyAutomaticChangesImmediately()) {
             updateLocked(0, 0);
         } else {
@@ -2074,8 +2076,9 @@ final class UiModeManagerService extends SystemService {
             mComputedNightMode = newComputedValue;
         }
 
-        if (mNightMode.get() != MODE_NIGHT_AUTO || (mTwilightManager != null
-                && mTwilightManager.getLastTwilightState() != null)) {
+        // Reset night mode overrides when not in auto/time-based modes, which reset them elsewhere.
+        final int nightMode = mNightMode.get();
+        if (nightMode != MODE_NIGHT_AUTO && nightMode != MODE_NIGHT_CUSTOM) {
             resetNightModeOverrideLocked();
         }
     }
