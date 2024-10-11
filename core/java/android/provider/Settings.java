@@ -6990,6 +6990,12 @@ public final class Settings {
         public static final String GAMESPACE_SUPPRESS_FULLSCREEN_INTENT = "gamespace_suppress_fullscreen_intent";
 
         /**
+         * Whether to enable smart 5G mode
+         * @hide
+         */
+        public static final String SMART_5G = "smart_5g";
+
+        /**
          * Swipe to screenshot
          * @hide
          */
@@ -7002,6 +7008,12 @@ public final class Settings {
         public static final String QS_BT_SHOW_DIALOG = "qs_bt_show_dialog";
 
         /**
+         * Whether to show the carrier name from the lockscreen
+         * @hide
+         */
+        public static final String CARRIER_ON_LOCKSCREEN = "carrier_on_lockscreen";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *
@@ -7012,12 +7024,6 @@ public final class Settings {
          */
         public static final String[] LEGACY_RESTORE_SETTINGS = {
         };
-
-        /**
-         * Whether to enable smart 5G mode
-         * @hide
-         */
-        public static final String SMART_5G = "smart_5g";
 
         /**
          * These are all public system settings

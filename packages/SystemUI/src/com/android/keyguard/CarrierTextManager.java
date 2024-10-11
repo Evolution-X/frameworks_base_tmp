@@ -20,6 +20,7 @@ import static com.android.keyguard.logging.CarrierTextManagerLogger.REASON_ACTIV
 import static com.android.keyguard.logging.CarrierTextManagerLogger.REASON_ON_TELEPHONY_CAPABLE;
 import static com.android.keyguard.logging.CarrierTextManagerLogger.REASON_REFRESH_CARRIER_INFO;
 import static com.android.keyguard.logging.CarrierTextManagerLogger.REASON_SIM_ERROR_STATE_CHANGED;
+import static com.android.keyguard.logging.CarrierTextManagerLogger.REASON_CARRIER_ON_LOCKSCREEN_CHANGED;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,11 @@ import android.telephony.TelephonyCallback.ActiveDataSubscriptionIdListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.provider.Settings;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
+import android.content.ContentResolver;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -214,6 +220,9 @@ public class CarrierTextManager {
                 });
             }
         });
+
+        SettingsObserver observer = new SettingsObserver();
+        observer.observe();
     }
 
     private TelephonyManager getTelephonyManager() {
@@ -410,6 +419,14 @@ public class CarrierTextManager {
         if (!anySimReadyAndInService && WirelessUtils.isAirplaneModeOn(mContext)) {
             displayText = getAirplaneModeMessage();
             airplaneMode = true;
+        }
+
+        // Hide the carrier text if the user requests
+        if (Settings.System.getInt(
+                getContext().getContentResolver(),
+                Settings.System.CARRIER_ON_LOCKSCREEN,
+                1) == 0) {
+            displayText = "";
         }
 
         final CarrierTextCallbackInfo info = new CarrierTextCallbackInfo(
@@ -615,6 +632,26 @@ public class CarrierTextManager {
             list.add(string);
         }
         return list;
+    }
+
+    private class SettingsObserver extends ContentObserver {
+        SettingsObserver() {
+            super(new Handler());
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.CARRIER_ON_LOCKSCREEN), false, this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            if (Settings.System.getUriFor(Settings.System.CARRIER_ON_LOCKSCREEN).equals(uri)) {
+                mLogger.logUpdateCarrierTextForReason(REASON_CARRIER_ON_LOCKSCREEN_CHANGED);
+                updateCarrierText();
+            }
+        }
     }
 
     /** Injectable Buildeer for {@#link CarrierTextManager}. */
