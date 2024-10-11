@@ -862,6 +862,9 @@
     <protected-broadcast android:name="com.android.server.app.AppLockManagerService.APP_LOCK_TIMEOUT" />
     <protected-broadcast android:name="android.app.action.UNLOCK_APP" />
 
+    <!-- Pocket Mode -->
+    <protected-broadcast android:name="org.rising.server.action.POCKET_STATE_CHANGED" />
+
     <!-- ====================================================================== -->
     <!--                          RUNTIME PERMISSIONS                           -->
     <!-- ====================================================================== -->

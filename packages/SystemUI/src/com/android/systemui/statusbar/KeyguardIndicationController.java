@@ -1869,6 +1869,10 @@ public class KeyguardIndicationController {
             }
             mDozing = dozing;
 
+            Intent intent = new Intent("org.rising.server.action.AOD_STATE_CHANGED");
+            intent.putExtra("is_doze", mDozing);
+            mContext.sendBroadcast(intent);
+
             if (mDozing) {
                 hideBiometricMessage();
                 hideFaceUnlockRecognizingMessage();

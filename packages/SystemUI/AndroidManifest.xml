@@ -404,6 +404,7 @@
     <protected-broadcast android:name="com.android.systemui.action.ACTION_LAUNCH_MEDIA_OUTPUT_BROADCAST_DIALOG" />
     <protected-broadcast android:name="com.android.systemui.STARTED" />
     <protected-broadcast android:name="com.android.systemui.doze.pulse" />
+    <protected-broadcast android:name="org.rising.server.action.AOD_STATE_CHANGED" />
 
     <application
         android:name=".SystemUIApplication"
@@ -462,6 +463,14 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.android.systemui.screenshot.SHOW_ERROR" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name=".pocket.PocketStateReceiver"
+            android:process=":pocketmode"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="org.rising.server.action.POCKET_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 
