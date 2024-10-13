@@ -117,4 +117,7 @@
 
     <!-- FPS Info tile -->
     <dimen name="fps_info_text_padding">4dp</dimen>
+
+    <!-- Weather -->  
+    <dimen name="weather_image_max_size">24dp</dimen>
 </resources>

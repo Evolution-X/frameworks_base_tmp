@@ -3,6 +3,8 @@
      Copyright (C) 2019-2024 The Evolution X Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources>
-
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <declare-styleable name="WeatherTextView">
+        <attr name="weatherText" format="string" />
+    </declare-styleable>
 </resources>
