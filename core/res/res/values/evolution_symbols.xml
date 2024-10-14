@@ -4,6 +4,10 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
+    <!-- Custom clocks -->
+    <java-symbol type="dimen" format="float" name="presentation_clock_text_size" />
+    <java-symbol type="dimen" format="float" name="large_clock_text_size" />
+    <java-symbol type="dimen" format="float" name="small_clock_text_size" />
 
     <!-- App error dialog -->
     <java-symbol type="id" name="aerr_copy" />

@@ -153,15 +153,29 @@ constructor(
         get() =
             featureFlags.isEnabled(Flags.LOCKSCREEN_ENABLE_LANDSCAPE) &&
                 // True on small landscape screens
-                applicationContext.resources.getBoolean(R.bool.force_small_clock_on_lockscreen)
+                applicationContext.resources.getBoolean(R.bool.force_small_clock_on_lockscreen) ||
+                secureSettings.getIntForUser(
+                    "clock_style",
+                    0, // Default value
+                    UserHandle.USER_CURRENT
+                ) != 0
 
     private fun getClockSize(): ClockSizeSetting {
-        return ClockSizeSetting.fromSettingValue(
-            secureSettings.getIntForUser(
-                Settings.Secure.LOCKSCREEN_USE_DOUBLE_LINE_CLOCK,
-                /* defaultValue= */ 1,
-                UserHandle.USER_CURRENT
-            )
+        val isDoubleLineClock = secureSettings.getIntForUser(
+            Settings.Secure.LOCKSCREEN_USE_DOUBLE_LINE_CLOCK,
+            1, // Default value
+            UserHandle.USER_CURRENT
         )
+        val clockStyleEnabled = secureSettings.getIntForUser(
+            "clock_style",
+            0, // Default value
+            UserHandle.USER_CURRENT
+        ) != 0
+        val clockSettingValue = if (clockStyleEnabled) {
+            0 
+        } else {
+            isDoubleLineClock
+        }
+        return ClockSizeSetting.fromSettingValue(clockSettingValue)
     }
 }

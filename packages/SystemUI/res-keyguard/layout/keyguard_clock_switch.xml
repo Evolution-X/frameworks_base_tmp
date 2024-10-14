@@ -45,6 +45,7 @@
          NotificationIconContainer has its own logic for translation. -->
     <com.android.keyguard.KeyguardStatusAreaView
         android:id="@+id/keyguard_status_area"
+        android:layout_marginTop="@dimen/keyguard_status_area_margin_top"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,6 +56,12 @@
                android:id="@+id/keyguard_slice_view"
                android:layout_width="match_parent"
                android:layout_height="wrap_content" />
+
+      <include 
+        android:id="@+id/clock_ls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/keyguard_clock_style" />
 
       <com.android.systemui.statusbar.phone.NotificationIconContainer
           android:id="@+id/left_aligned_notification_icon_container"
