@@ -1102,7 +1102,7 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         row.anim = null;
 
         final LayerDrawable seekbarDrawable =
-                (LayerDrawable) mContext.getDrawable(R.drawable.volume_row_seekbar);
+                (LayerDrawable) mContext.getDrawable(mVolumeUtils.getRowDrawable());
 
         final LayerDrawable seekbarProgressDrawable = (LayerDrawable)
                 ((RoundedCornerProgressDrawable) seekbarDrawable.findDrawableByLayerId(
