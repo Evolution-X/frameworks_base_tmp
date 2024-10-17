@@ -63,6 +63,12 @@
                android:layout_height="wrap_content" />
 
       <include 
+        android:id="@+id/aod_ls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/keyguard_aod_style" />
+
+      <include 
         android:id="@+id/clock_ls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
