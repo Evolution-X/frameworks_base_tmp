@@ -114,8 +114,7 @@ public abstract class LyricViewController implements
         if (!mEnabled) return;
 
         Notification notification = sbn.getNotification();
-        boolean isLyric = ((notification.flags & Notification.FLAG_ALWAYS_SHOW_TICKER) != 0)
-                && ((notification.flags & Notification.FLAG_ONLY_UPDATE_TICKER) != 0);
+        boolean isLyric = (notification.flags & Notification.FLAG_ALWAYS_SHOW_TICKER) != 0;
 
         boolean isCurrentNotification = mCurrentNotificationId == sbn.getId() &&
                 TextUtils.equals(sbn.getPackageName(), mCurrentNotificationPackage);
