@@ -78,7 +78,7 @@ public class AutoAODService extends SystemService {
 
     private final AlarmManager mAlarmManager;
     private final Context mContext;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler();
     private TwilightManager mTwilightManager;
     private TwilightState mTwilightState;
     private SharedPreferences mSharedPreferences;
@@ -234,7 +234,7 @@ public class AutoAODService extends SystemService {
         super(context);
         mContext = context;
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        mSettingsObserver = new SettingsObserver(mHandler);
+        mSettingsObserver = new SettingsObserver(null);
         mActive = Settings.Secure.getIntForUser(
                 mContext.getContentResolver(),
                 Settings.Secure.DOZE_ALWAYS_ON, 0,
