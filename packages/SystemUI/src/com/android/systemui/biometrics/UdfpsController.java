@@ -890,7 +890,7 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                 Settings.Secure.SCREEN_OFF_UDFPS_ENABLED, 0, UserHandle.USER_CURRENT) == 1;
             mContext.getContentResolver().registerContentObserver(
                 Settings.Secure.getUriFor(Settings.Secure.SCREEN_OFF_UDFPS_ENABLED), false,
-                new ContentObserver(mainHandler) {
+                new ContentObserver(null) {
                     @Override
                     public void onChange(boolean selfChange, Uri uri) {
                         if (uri.getLastPathSegment().equals(Settings.Secure.SCREEN_OFF_UDFPS_ENABLED)) {
