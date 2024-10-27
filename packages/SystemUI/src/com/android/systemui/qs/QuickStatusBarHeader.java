@@ -87,7 +87,7 @@ public class QuickStatusBarHeader extends FrameLayout
             updateSettings();
         }
     }
-    private OmniSettingsObserver mOmniSettingsObserver = new OmniSettingsObserver(mHandler);
+    private OmniSettingsObserver mOmniSettingsObserver = new OmniSettingsObserver(null);
 
     public QuickStatusBarHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
