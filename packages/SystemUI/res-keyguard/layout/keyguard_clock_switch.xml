@@ -74,6 +74,11 @@
         android:layout_height="wrap_content"
         layout="@layout/keyguard_clock_style" />
 
+    <include layout="@layout/keyguard_clock_widgets"
+        android:id="@+id/keyguard_widgets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
       <com.android.systemui.statusbar.phone.NotificationIconContainer
           android:id="@+id/left_aligned_notification_icon_container"
           android:layout_width="match_parent"
