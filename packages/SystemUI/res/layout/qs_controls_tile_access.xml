@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/qs_controls_tile_access">
+
+    <LinearLayout
+        android:id="@+id/qs_controls_access_layout"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/qs_controls_tile_height"
+        android:layout_marginTop="@dimen/qs_controls_slider_margin_top"
+        android:layout_marginBottom="@dimen/qs_controls_slider_margin_bottom"
+        android:layout_marginEnd="@dimen/qs_controls_tile_margin_end"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.android.systemui.animation.view.LaunchableLinearLayout
+            android:id="@+id/internet_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/qs_controls_tiles_height"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/qs_control_tile_padding_vertical"
+            android:paddingStart="@dimen/qs_control_tile_padding_start"
+            android:paddingEnd="@dimen/qs_control_tile_padding_end"
+            android:gravity="center_vertical"
+            android:background="@drawable/rounded_button_background"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_marginTop="@dimen/qs_controls_tile_top_margin"
+            android:layout_marginStart="@dimen/qs_controls_tile_icon_margin_start"
+            android:layout_marginEnd="@dimen/qs_controls_tile_icon_margin_end">
+
+            <ImageView
+                android:id="@+id/internet_btn_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_mobiledata_off_24"
+                android:paddingEnd="@dimen/qs_controls_tile_icon_side_padding" />
+
+            <TextView
+                android:id="@+id/internet_btn_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@*android:string/config_bodyFontFamily"
+                android:textSize="@dimen/qs_control_tile_text_size"
+                android:gravity="start"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true" />
+
+            <ImageView
+                android:id="@+id/internet_btn_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@*android:drawable/ic_chevron_end" />
+
+        </com.android.systemui.animation.view.LaunchableLinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/qs_controls_tile_top_margin_secondary"
+            android:background="@android:color/transparent" />
+
+        <com.android.systemui.animation.view.LaunchableLinearLayout
+            android:id="@+id/bt_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/qs_controls_tiles_height"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/qs_control_tile_padding_vertical"
+            android:paddingStart="@dimen/qs_control_tile_padding_start"
+            android:paddingEnd="@dimen/qs_control_tile_padding_end"
+            android:gravity="center_vertical"
+            android:background="@drawable/rounded_button_background"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_marginStart="@dimen/qs_controls_tile_icon_margin_start"
+            android:layout_marginEnd="@dimen/qs_controls_tile_icon_margin_end">
+
+            <ImageView
+                android:id="@+id/bt_btn_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/qs_bluetooth_icon_off"
+                android:paddingEnd="@dimen/qs_controls_tile_icon_side_padding" />
+
+            <TextView
+                android:id="@+id/bt_btn_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@*android:string/config_bodyFontFamily"
+                android:textSize="@dimen/qs_control_tile_text_size"
+                android:gravity="start"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true" />
+
+            <ImageView
+                android:id="@+id/bt_btn_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@*android:drawable/ic_chevron_end" />
+
+        </com.android.systemui.animation.view.LaunchableLinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

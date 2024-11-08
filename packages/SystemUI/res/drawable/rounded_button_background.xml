@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="?android:attr/colorBackground" /> 
+    <corners android:radius="@dimen/qs_controls_tile_corner_radius" /> 
+    <elevation android:value="4dp" />
+</shape>

@@ -10,4 +10,13 @@
 
     <!-- Notification counter -->
     <color name="notification_number_text_color">#ff000000</color>
+
+    <!-- QS Widgets -->
+    <color name="qs_controls_container_bg_color_dark">@android:color/system_neutral1_800</color>
+    <color name="qs_controls_container_bg_color_light">@android:color/system_neutral1_50</color>
+    <color name="qs_controls_bg_color_dark">@android:color/system_neutral1_800</color>
+    <color name="qs_controls_bg_color_light">@*android:color/surface_light</color>
+    <color name="qs_controls_active_color_dark">@android:color/system_accent1_100</color>
+    <color name="qs_controls_active_color_light">@android:color/system_accent1_600</color>
+    <color name="qs_controls_surface_color">@android:color/system_neutral1_50</color>
 </resources>

@@ -42,6 +42,12 @@
             android:clipToPadding="false"
             android:clipChildren="false">
 
+            <include layout="@layout/qs_controls_layout"
+                    android:id="@+id/qs_controls_layout_shade"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
             <include layout="@layout/qs_footer_impl" />
         </com.android.systemui.qs.QSPanel>
     </com.android.systemui.qs.NonInterceptingScrollView>

@@ -251,7 +251,9 @@ public class QuickQSPanel extends QSPanel implements TunerService.Tunable {
         public boolean updateResources() {
             mResourceCellHeightResId = R.dimen.qs_quick_tile_size;
             boolean b = super.updateResources();
-            mMaxAllowedRows = getResourceRows();
+            boolean qsWidgetsEnabled = TileUtils.isQsWidgetsEnabled(mContext);
+            int maxRowCount = getResourceRows();
+            mMaxAllowedRows = qsWidgetsEnabled && maxRowCount > 2 ? 2 : maxRowCount;
             return b;
         }
 

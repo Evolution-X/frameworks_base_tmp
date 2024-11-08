@@ -65,17 +65,26 @@
 
     </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
-    <com.android.systemui.qs.QuickQSPanel
-        android:id="@+id/quick_qs_panel"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/qs_container"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/qqs_layout_margin_top"
+        android:layout_gravity="top"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        android:focusable="true"
-        android:paddingTop="@dimen/custom_qs_panel_padding_top"
-        android:paddingBottom="@dimen/qqs_layout_padding_bottom"
-        android:importantForAccessibility="no">
-    </com.android.systemui.qs.QuickQSPanel>
+        android:clipToPadding="false">
+        <include layout="@layout/qs_controls_layout" />
+        <com.android.systemui.qs.QuickQSPanel
+            android:id="@+id/quick_qs_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_below="@id/qs_controls"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:focusable="true"
+            android:paddingBottom="@dimen/qqs_layout_padding_bottom"
+            android:importantForAccessibility="no">
+        </com.android.systemui.qs.QuickQSPanel>
+    </RelativeLayout>
 
 </com.android.systemui.qs.QuickStatusBarHeader>

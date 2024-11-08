@@ -125,4 +125,40 @@
     <dimen name="custom_aod_image_size">180dp</dimen>
     <dimen name="custom_clock_frame_margin_top">0dp</dimen>
     <dimen name="keyguard_status_area_margin_top">0dp</dimen>
+
+    <!-- QS Widgets -->  
+    <dimen name="qs_controls_padding_top">248dp</dimen>
+    <dimen name="qs_controls_top_margin">16dp</dimen>
+    <dimen name="qs_controls_tile_height">180dp</dimen>
+    <dimen name="qs_controls_tile_margin_end">0dp</dimen>
+    <dimen name="qs_controls_margin_top">0dp</dimen>
+    <dimen name="qs_controls_margin_bottom">0dp</dimen>
+    <dimen name="qs_controls_tile_size">24dp</dimen>
+    <dimen name="qs_controls_tile_top_margin">16dp</dimen>
+    <dimen name="qs_controls_tile_top_margin_secondary">12dp</dimen>
+    <dimen name="qs_controls_tile_icon_margin_start">0dp</dimen>
+    <dimen name="qs_controls_tile_icon_margin_end">0dp</dimen>
+    <dimen name="qs_controls_center_height">158dp</dimen>
+    <dimen name="qs_controls_slider_height">140dp</dimen>
+    <dimen name="qs_controls_slider_width">72dp</dimen>
+    <dimen name="qs_controls_slider_corner_radius">22dp</dimen>
+    <dimen name="qs_controls_slider_margin_top">10dp</dimen>
+    <dimen name="qs_controls_slider_margin_bottom">10dp</dimen>
+    <dimen name="qs_controls_slider_icon_margin_bottom">16dp</dimen>
+    <dimen name="qs_controls_translucent_alpha">0.275</dimen>
+    <dimen name="qs_controls_brightness_slider_margin_end">8dp</dimen>
+    <dimen name="qs_controls_brightness_slider_margin_start">12dp</dimen>
+    <dimen name="qs_controls_volume_slider_margin_end">12dp</dimen>
+    <dimen name="qs_controls_volume_slider_margin_start">12dp</dimen>
+    <dimen name="qs_control_tile_padding_vertical">12dp</dimen>
+    <dimen name="qs_control_tile_padding_start">16dp</dimen>
+    <dimen name="qs_control_tile_padding_end">22dp</dimen>
+    <dimen name="qs_control_tile_text_size">14sp</dimen>
+    <dimen name="qs_controls_tiles_height">66dp</dimen>
+    <dimen name="qs_controls_tiles_width">185dp</dimen>
+    <dimen name="qs_controls_tile_icon_side_padding">10dp</dimen>
+    <dimen name="qs_controls_widgets_container_margin_start">8dp</dimen>
+    <dimen name="qs_controls_widgets_container_margin_end">0dp</dimen>
+    <dimen name="qs_slider_swipe_threshold_dp">40dp</dimen>
+    <dimen name="qs_controls_tile_corner_radius">100dp</dimen>
 </resources>

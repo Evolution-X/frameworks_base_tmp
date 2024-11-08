@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:id="@+id/qs_controls_sliders"
+    android:layout_height="@dimen/qs_controls_center_height"
+    android:gravity="center">
+
+    <com.android.systemui.qs.BrightnessSlider
+        android:id="@+id/qs_controls_brightness_slider"
+        android:layout_width="@dimen/qs_controls_slider_width"
+        android:layout_height="@dimen/qs_controls_slider_height"
+        android:layout_marginStart="@dimen/qs_controls_widgets_container_margin_start"
+        android:layout_marginEnd="@dimen/qs_controls_brightness_slider_margin_end"
+        android:layout_marginTop="@dimen/qs_controls_slider_margin_top"
+        android:layout_marginBottom="@dimen/qs_controls_slider_margin_bottom"
+        app:cardBackgroundColor="@color/qs_controls_surface_color"
+        app:cardCornerRadius="@dimen/qs_controls_slider_corner_radius"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/qs_controls_brightness_slider_icon"
+            android:layout_width="@dimen/qs_controls_tile_size"
+            android:layout_height="@dimen/qs_controls_tile_size"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="@dimen/qs_controls_slider_icon_margin_bottom" />
+
+    </com.android.systemui.qs.BrightnessSlider>
+
+    <com.android.systemui.qs.VolumeSlider
+        android:id="@+id/qs_controls_volume_slider"
+        android:layout_width="@dimen/qs_controls_slider_width"
+        android:layout_height="@dimen/qs_controls_slider_height"
+        android:layout_marginEnd="@dimen/qs_controls_widgets_container_margin_end"
+        android:layout_marginStart="@dimen/qs_controls_volume_slider_margin_start"
+        android:layout_marginTop="@dimen/qs_controls_slider_margin_top"
+        android:layout_marginBottom="@dimen/qs_controls_slider_margin_bottom"
+        app:cardBackgroundColor="@color/qs_controls_surface_color"
+        app:cardCornerRadius="@dimen/qs_controls_slider_corner_radius"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/qs_controls_volume_slider_icon"
+            android:layout_width="@dimen/qs_controls_tile_size"
+            android:layout_height="@dimen/qs_controls_tile_size"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="@dimen/qs_controls_slider_icon_margin_bottom"
+            android:src="@drawable/ic_volume_media" />
+
+    </com.android.systemui.qs.VolumeSlider>
+
+</LinearLayout>

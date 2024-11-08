@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.qs.QsControlsView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/qs_controls"
+    android:background="@android:color/transparent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/qs_controls_margin_top"
+    android:layout_marginBottom="@dimen/qs_controls_margin_bottom"
+    android:baselineAligned="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/qs_controls_tiles"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/qs_controls_center_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/qs_controls_sliders"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.5">
+            <include
+                android:id="@+id/qs_controls_tile_access"
+                layout="@layout/qs_controls_tile_access" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qs_controls_sliders"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/qs_controls_center_height"
+            app:layout_constraintStart_toEndOf="@id/qs_controls_tiles"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.5">
+            <include
+                android:id="@+id/qs_controls_sliders"
+                layout="@layout/qs_controls_sliders" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.android.systemui.qs.QsControlsView>
