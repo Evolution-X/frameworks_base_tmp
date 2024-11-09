@@ -33,8 +33,8 @@ import com.android.internal.statusbar.StatusBarIcon.Shape;
 import com.android.systemui.demomode.DemoModeCommandReceiver;
 import com.android.systemui.modes.shared.ModesUiIcons;
 import com.android.systemui.statusbar.BaseStatusBarFrameLayout;
+import com.android.systemui.statusbar.NetworkTraffic;
 import com.android.systemui.statusbar.StatusBarIconView;
-import com.android.systemui.statusbar.StatusBarNetworkTraffic;
 import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.connectivity.ui.MobileContextProvider;
 import com.android.systemui.statusbar.phone.DemoStatusIcons;
@@ -216,8 +216,8 @@ public class IconManager implements DemoModeCommandReceiver {
         return view;
     }
 
-    private StatusBarNetworkTraffic addNetworkTraffic(int index, String slot, NetworkTrafficState state) {
-        StatusBarNetworkTraffic view = onCreateStatusBarNetworkTraffic(slot);
+    private NetworkTraffic addNetworkTraffic(int index, String slot, NetworkTrafficState state) {
+        NetworkTraffic view = onCreateNetworkTraffic(slot);
         view.applyNetworkTrafficState(state);
         mGroup.addView(view, index, onCreateLayoutParams());
         return view;
@@ -243,8 +243,8 @@ public class IconManager implements DemoModeCommandReceiver {
                 );
     }
 
-    private StatusBarNetworkTraffic onCreateStatusBarNetworkTraffic(String slot) {
-        StatusBarNetworkTraffic view = StatusBarNetworkTraffic.fromContext(mContext, slot);
+    private NetworkTraffic onCreateNetworkTraffic(String slot) {
+        NetworkTraffic view = NetworkTraffic.fromContext(mContext, slot);
         return view;
     }
 
@@ -305,7 +305,7 @@ public class IconManager implements DemoModeCommandReceiver {
     }
 
     public void onSetNetworkTraffic(int viewIndex, NetworkTrafficState state) {
-        StatusBarNetworkTraffic view = (StatusBarNetworkTraffic) mGroup.getChildAt(viewIndex);
+        NetworkTraffic view = (NetworkTraffic) mGroup.getChildAt(viewIndex);
         if (view != null) {
             view.applyNetworkTrafficState(state);
         }
