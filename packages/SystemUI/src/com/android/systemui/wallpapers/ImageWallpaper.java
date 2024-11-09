@@ -33,10 +33,12 @@ import android.graphics.Canvas;
 import android.graphics.RecordingCanvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Paint;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.DisplayManager.DisplayListener;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.SystemProperties;
 import android.os.Trace;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
@@ -320,9 +322,21 @@ public class ImageWallpaper extends WallpaperService {
             } catch (IllegalStateException e) {
                 Log.w(TAG, "Unable to lock canvas", e);
             }
+
             if (canvas != null) {
                 Rect dest = mSurfaceHolder.getSurfaceFrame();
                 try {
+                    int blurType = SystemProperties.getInt("persist.sys.wallpaper.blur_enabled", 0);
+                    // allow for both home and ls wallpaper, lockscreen only, home only
+                    if (blurType == 1 || (blurType == 2 && isLockScreenWallpaper()) || (blurType == 3 && !isLockScreenWallpaper())) {
+                        bitmap = WallpaperUtils.getBlurredBitmap(bitmap, blurType, 25, getDisplayContext());
+                    }
+                    // allow for both home and ls wallpaper, lockscreen only, home only
+                    int dimType = SystemProperties.getInt("persist.sys.wallpaper.dim_enabled", 0);
+                    if (dimType == 1 || (dimType == 2 && isLockScreenWallpaper()) || (dimType == 3 && !isLockScreenWallpaper())) {
+                        int dimLevel = SystemProperties.getInt("persist.sys.wallpaper.dim_level", 10);
+                        bitmap = WallpaperUtils.getDimmedBitmap(bitmap, dimLevel);
+                    }
                     canvas.drawBitmap(bitmap, null, dest, null);
                     mDrawn = true;
                 } finally {
@@ -331,6 +345,11 @@ public class ImageWallpaper extends WallpaperService {
             }
             Trace.endSection();
         }
+
+	    private boolean isLockScreenWallpaper() {
+		    return (this.getWallpaperFlags() & FLAG_LOCK)
+				    == FLAG_LOCK;
+	    }
 
         @VisibleForTesting
         boolean isBitmapLoaded() {
