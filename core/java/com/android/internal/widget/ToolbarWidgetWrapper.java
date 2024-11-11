@@ -319,7 +319,11 @@ public class ToolbarWidgetWrapper implements DecorToolbar {
 
     @Override
     public void setIcon(int resId) {
-        setIcon(resId != 0 ? getContext().getDrawable(resId) : null);
+        try {
+            setIcon(resId != 0 ? getContext().getDrawable(resId) : null);
+        } catch (Exception e) {
+            setIcon(null);
+        }
     }
 
     @Override
