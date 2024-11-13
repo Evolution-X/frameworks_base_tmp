@@ -133,12 +133,17 @@ public final class DrawableInflater {
             }
         }
 
-        Drawable drawable = inflateFromTag(name);
-        if (drawable == null) {
-            drawable = inflateFromClass(name);
+        Drawable drawable;
+        try {
+            drawable = inflateFromTag(name);
+            if (drawable == null) {
+                drawable = inflateFromClass(name);
+            }
+            drawable.setSrcDensityOverride(density);
+            drawable.inflate(mRes, parser, attrs, theme);
+        } catch (Exception e) {
+            drawable = new ColorDrawable(android.graphics.Color.TRANSPARENT);
         }
-        drawable.setSrcDensityOverride(density);
-        drawable.inflate(mRes, parser, attrs, theme);
         return drawable;
     }
 
