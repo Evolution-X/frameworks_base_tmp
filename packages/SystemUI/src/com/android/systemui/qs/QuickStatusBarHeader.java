@@ -81,6 +81,10 @@ public class QuickStatusBarHeader extends FrameLayout
                     Settings.System.STATUS_BAR_CUSTOM_HEADER_HEIGHT), false,
                     this, UserHandle.USER_ALL);
             }
+            
+        void unobserve() {
+            getContext().getContentResolver().unregisterContentObserver(this);
+        }
 
         @Override
         public void onChange(boolean selfChange) {
@@ -91,8 +95,6 @@ public class QuickStatusBarHeader extends FrameLayout
 
     public QuickStatusBarHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mStatusBarHeaderMachine = new StatusBarHeaderMachine(context);
-        mOmniSettingsObserver.observe();
     }
 
     @Override
@@ -123,14 +125,17 @@ public class QuickStatusBarHeader extends FrameLayout
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mStatusBarHeaderMachine = new StatusBarHeaderMachine(mContext);
         mStatusBarHeaderMachine.addObserver(this);
         mStatusBarHeaderMachine.updateEnablement();
+        mOmniSettingsObserver.observe();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mStatusBarHeaderMachine.removeObserver(this);
+        mOmniSettingsObserver.unobserve();
     }
 
     @Override
