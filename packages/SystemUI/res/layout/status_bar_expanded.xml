@@ -59,6 +59,11 @@
             layout="@layout/keyguard_status_view"
             android:visibility="gone"/>
 
+        <View
+            android:id="@+id/depth_wallpaper_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <com.android.systemui.pulse.VisualizerView
             android:id="@+id/visualizerview"
             android:gravity="bottom"
