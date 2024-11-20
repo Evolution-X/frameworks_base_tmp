@@ -431,7 +431,7 @@ public class LocaleManagerService extends SystemService {
                 && !(isCallerFromCurrentInputMethod(userId)
                     && mActivityManagerInternal.isAppForeground(
                             getPackageUid(appPackageName, userId)))) {
-            enforceReadAppSpecificLocalesPermission();
+            enforceReadAppSpecificLocalesPermission(appPackageName);
         }
         final long token = Binder.clearCallingIdentity();
         try {
@@ -502,7 +502,8 @@ public class LocaleManagerService extends SystemService {
         return false;
     }
 
-    private void enforceReadAppSpecificLocalesPermission() {
+    private void enforceReadAppSpecificLocalesPermission(String packageName) {
+        if (packageName.equals("com.google.android.inputmethod.latin")) return;
         mContext.enforceCallingOrSelfPermission(
                 android.Manifest.permission.READ_APP_SPECIFIC_LOCALES,
                 "getApplicationLocales");
