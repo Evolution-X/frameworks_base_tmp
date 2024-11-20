@@ -21,9 +21,11 @@ import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.content.Context
 import android.content.res.Configuration
+import android.database.ContentObserver
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.provider.Settings
 import android.view.View
 import android.view.animation.Interpolator
@@ -111,6 +113,8 @@ constructor(
     private var animateNextStateChange: Boolean = false
     private val measurement = MeasurementOutput(0, 0)
     private var type: TYPE = TYPE.PLAYER
+
+    private val settingsObserver = SettingsObserver()
 
     /** A map containing all viewStates for all locations of this mediaState */
     private val viewStates: MutableMap<CacheKey, TransitionViewState?> = mutableMapOf()
@@ -240,6 +244,20 @@ constructor(
         if (!SceneContainerFlag.isEnabled) return
         seekBarViewModel.listening = listening
     }
+    
+    inner class SettingsObserver : ContentObserver(null) {
+        fun observe() {
+            val uri: Uri = Settings.System.getUriFor("qs_compact_media_player_mode")
+            context.contentResolver.registerContentObserver(uri, false, this)
+        }
+        override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+            refreshState()
+        }
+        fun unobserve() {
+            context.contentResolver.unregisterContentObserver(this)
+        }
+    }
 
     /** A callback for config changes */
     private val configurationListener =
@@ -337,6 +355,7 @@ constructor(
             sizeChangedListener.invoke()
         }
         configurationController.addCallback(configurationListener)
+        settingsObserver.observe()
     }
 
     /**
@@ -353,6 +372,7 @@ constructor(
         }
         mediaHostStatesManager.removeController(this)
         configurationController.removeCallback(configurationListener)
+        settingsObserver.unobserve()
     }
 
     /** Show guts with an animated transition. */
@@ -398,8 +418,13 @@ constructor(
     }
 
     /** Get the constraintSet for a given expansion */
-    private fun constraintSetForExpansion(expansion: Float): ConstraintSet =
-        if (expansion > 0) expandedLayout else collapsedLayout
+    private fun constraintSetForExpansion(expansion: Float): ConstraintSet {
+        return when {
+            com.android.systemui.qs.TileUtils.isCompactQSMediaPlayerEnforced(context) -> collapsedLayout
+            expansion > 0 -> expandedLayout
+            else -> collapsedLayout
+        }
+    }
 
     /** Set the height of UMO background constraints. */
     private fun setBackgroundHeights(height: Int) {

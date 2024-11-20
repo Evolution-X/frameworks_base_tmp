@@ -120,4 +120,9 @@ public class TileUtils {
                 Settings.System.QS_TILE_UI_STYLE,
                 0, UserHandle.USER_CURRENT);
    }
+
+   public static boolean isCompactQSMediaPlayerEnforced(Context context) {
+        return Settings.System.getIntForUser(context.getContentResolver(),
+            "qs_compact_media_player_mode",0, UserHandle.USER_CURRENT) != 0;
+   }
 }
