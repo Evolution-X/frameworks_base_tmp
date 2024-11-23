@@ -141,7 +141,7 @@ public class PendingIntentController {
                         + packageName
                         + ") because this option is meant for the pending intent sender");
                 if (CompatChanges.isChangeEnabled(PendingIntent.PENDING_INTENT_OPTIONS_CHECK,
-                        callingUid)) {
+                        callingUid) && !packageName.equals("app.lawnchair")) {
                     throw new IllegalArgumentException("pendingIntentBackgroundActivityStartMode "
                             + "must not be set when creating a PendingIntent");
                 }
