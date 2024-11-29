@@ -154,13 +154,11 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
     private boolean mShowLockscreenWidgets;
     
     private boolean mEnableCustomClock = false;
+    private boolean mPeekDisplayEnabled = false;
     private int mClockStyle = 0;
     private final ContentObserver mCustomClockObserver = new ContentObserver(null) {
         @Override
         public void onChange(boolean change) {
-            mClockStyle = mSecureSettings.getIntForUser(
-                ClockStyle.CLOCK_STYLE_KEY, 0, UserHandle.USER_CURRENT);
-            mEnableCustomClock = mClockStyle != 0;
             updateDoubleLineClock();
         }
     };
@@ -168,8 +166,6 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
     private final ContentObserver mLockscreenWidgetObserver = new ContentObserver(null) {
         @Override
         public void onChange(boolean change) {
-            mShowLockscreenWidgets = mSystemSettings.getIntForUser(
-                "lockscreen_widgets_enabled", 0, UserHandle.USER_CURRENT) != 0;
             updateDoubleLineClock();
         }
     };
@@ -349,6 +345,12 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
             );
             mSecureSettings.registerContentObserverForUserSync(
                     ClockStyle.CLOCK_STYLE_KEY,
+                    false, /* notifyForDescendants */
+                    mCustomClockObserver,
+                    UserHandle.USER_ALL
+            );
+            mSecureSettings.registerContentObserverForUserSync(
+                    "peek_display_notifications",
                     false, /* notifyForDescendants */
                     mCustomClockObserver,
                     UserHandle.USER_ALL
@@ -681,13 +683,23 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
         if (MigrateClocksToBlueprint.isEnabled()) {
             return;
         }
+        mClockStyle = mSecureSettings.getIntForUser(
+            ClockStyle.CLOCK_STYLE_KEY, 0, UserHandle.USER_CURRENT);
+
+        mEnableCustomClock = mClockStyle != 0;
+
+        mPeekDisplayEnabled = mSecureSettings.getIntForUser(
+            "peek_display_notifications", 0, UserHandle.USER_CURRENT) != 0;
+
+        mShowLockscreenWidgets = mSystemSettings.getIntForUser(
+            "lockscreen_widgets_enabled", 0, UserHandle.USER_CURRENT) != 0;
+
         mCanShowDoubleLineClock = mSecureSettings.getIntForUser(
             Settings.Secure.LOCKSCREEN_USE_DOUBLE_LINE_CLOCK, mView.getResources()
                     .getInteger(com.android.internal.R.integer.config_doublelineClockDefault),
             UserHandle.USER_CURRENT) != 0;
 
-        if (mEnableCustomClock || mShowLockscreenWidgets) {
-            mCanShowDoubleLineClock = false;
+        if (mEnableCustomClock || mShowLockscreenWidgets || mPeekDisplayEnabled) {
             if (mCanShowDoubleLineClock) {
                 mSecureSettings.putIntForUser(
                         Settings.Secure.LOCKSCREEN_USE_DOUBLE_LINE_CLOCK,

@@ -92,9 +92,16 @@ public class NotificationListener extends NotificationListenerWithPlugins implem
     /** Registers a listener that's notified when notifications are added/removed/etc. */
     public void addNotificationHandler(NotificationHandler handler) {
         if (mNotificationHandlers.contains(handler)) {
-            throw new IllegalArgumentException("Listener is already added");
+            removeNotificationHandler(handler);
         }
         mNotificationHandlers.add(handler);
+    }
+
+    public void removeNotificationHandler(NotificationHandler handler) {
+        if (!mNotificationHandlers.contains(handler)) {
+            return;
+        }
+        mNotificationHandlers.remove(handler);
     }
 
     @Override

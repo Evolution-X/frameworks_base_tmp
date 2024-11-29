@@ -2994,8 +2994,10 @@ public class PreferencesHelper implements RankingConfig {
         for (int index = 0; index < mLockScreenShowNotifications.size(); index++) {
             int userId = mLockScreenShowNotifications.keyAt(index);
             final boolean oldValue = mLockScreenShowNotifications.get(userId);
+            final boolean peekDisplayEnabled = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                    "peek_display_notifications", 0, userId) != 0;
             final boolean newValue = Settings.Secure.getIntForUser(mContext.getContentResolver(),
-                    Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, 1, userId) != 0;
+                    Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, 1, userId) != 0 && !peekDisplayEnabled;
             mLockScreenShowNotifications.put(userId, newValue);
             changed |= oldValue != newValue;
         }

@@ -126,6 +126,8 @@ constructor(
     private var allowMediaPlayerOnLockScreen: Boolean = true
     private val lockScreenMediaPlayerUri =
         secureSettings.getUriFor(Settings.Secure.MEDIA_CONTROLS_LOCK_SCREEN)
+    private val peekDisplayUri =
+        systemSettings.getUriFor("peek_display_expanded")
 
     /**
      * Whether we "skip" QQS during panel expansion.
@@ -629,13 +631,18 @@ constructor(
         val settingsObserver: ContentObserver =
             object : ContentObserver(handler) {
                 override fun onChange(selfChange: Boolean, uri: Uri?) {
-                    if (uri == lockScreenMediaPlayerUri) {
-                        allowMediaPlayerOnLockScreen =
-                            secureSettings.getBoolForUser(
+                    if (uri == lockScreenMediaPlayerUri || uri == peekDisplayUri) {
+                        val isPeekDisplayExpanded = systemSettings.getBoolForUser(
+                                "peek_display_expanded",
+                                false,
+                                UserHandle.USER_CURRENT
+                            )
+                        val lsControlsEnabled = secureSettings.getBoolForUser(
                                 Settings.Secure.MEDIA_CONTROLS_LOCK_SCREEN,
                                 true,
                                 UserHandle.USER_CURRENT
                             )
+                        allowMediaPlayerOnLockScreen = lsControlsEnabled && !isPeekDisplayExpanded
                     }
                 }
             }

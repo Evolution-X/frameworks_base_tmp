@@ -791,6 +791,11 @@ public class QSImpl implements QS, CommandQueue.Callbacks, StatusBarStateControl
         } else {
             com.android.systemui.util.WallpaperDepthUtils.getInstance(getContext()).hideDepthWallpaper();
         }
+        if (fullyCollapsed) {
+            com.android.systemui.notifications.ui.PeekDisplayViewController.Companion.getInstance().showPeekDisplayView();
+        } else {
+            com.android.systemui.notifications.ui.PeekDisplayViewController.Companion.getInstance().hidePeekDisplayView();
+        }
     }
 
     private void setAlphaAnimationProgress(float progress) {

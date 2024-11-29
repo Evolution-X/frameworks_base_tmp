@@ -85,6 +85,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.android.systemui.notifications.ui.PeekDisplayHolderLinearLayout
+        android:id="@+id/peek_display_area_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.android.systemui.notifications.ui.PeekDisplayView
+            android:id="@+id/peek_display_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.android.systemui.notifications.ui.PeekDisplayHolderLinearLayout>
+
       <com.android.systemui.statusbar.phone.NotificationIconContainer
           android:id="@+id/left_aligned_notification_icon_container"
           android:layout_width="match_parent"

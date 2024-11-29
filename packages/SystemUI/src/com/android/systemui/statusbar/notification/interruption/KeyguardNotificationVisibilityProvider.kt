@@ -140,6 +140,12 @@ constructor(
             settingsObserver,
             UserHandle.USER_ALL
         )
+        
+        secureSettings.registerContentObserverForUserSync(
+            "peek_display_notifications",
+            settingsObserver,
+            UserHandle.USER_ALL
+        )
 
         secureSettings.registerContentObserverForUserSync(
             Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS,

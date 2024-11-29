@@ -2187,6 +2187,8 @@ public class NotificationManagerService extends SystemService {
                         Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS);
         private final Uri LOCK_SCREEN_SHOW_NOTIFICATIONS
                 = Secure.getUriFor(Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS);
+        private final Uri PEEK_DISPLAY
+                = Secure.getUriFor("peek_display_notifications");
         private final Uri SHOW_NOTIFICATION_SNOOZE
                 = Secure.getUriFor(Secure.SHOW_NOTIFICATION_SNOOZE);
 
@@ -2210,6 +2212,8 @@ public class NotificationManagerService extends SystemService {
             resolver.registerContentObserver(LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS,
                     false, this, USER_ALL);
             resolver.registerContentObserver(LOCK_SCREEN_SHOW_NOTIFICATIONS,
+                    false, this, USER_ALL);
+            resolver.registerContentObserver(PEEK_DISPLAY,
                     false, this, USER_ALL);
 
             resolver.registerContentObserver(SHOW_NOTIFICATION_SNOOZE,
@@ -2249,7 +2253,7 @@ public class NotificationManagerService extends SystemService {
             if (uri == null || LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS.equals(uri)) {
                 mPreferencesHelper.updateLockScreenPrivateNotifications();
             }
-            if (uri == null || LOCK_SCREEN_SHOW_NOTIFICATIONS.equals(uri)) {
+            if (uri == null || LOCK_SCREEN_SHOW_NOTIFICATIONS.equals(uri) || PEEK_DISPLAY.equals(uri)) {
                 mPreferencesHelper.updateLockScreenShowNotifications();
             }
             if (SHOW_NOTIFICATION_SNOOZE.equals(uri)) {
