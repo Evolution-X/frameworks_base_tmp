@@ -74,6 +74,12 @@
         android:layout_height="wrap_content"
         layout="@layout/keyguard_clock_style" />
 
+      <include 
+        android:id="@+id/keyguard_info_widgets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/keyguard_info_widgets" />
+
     <include layout="@layout/keyguard_clock_widgets"
         android:id="@+id/keyguard_widgets"
         android:layout_width="match_parent"
