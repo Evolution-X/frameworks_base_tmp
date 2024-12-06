@@ -5527,10 +5527,10 @@
   <java-symbol type="bool" name="config_evenDimmerEnabled" />
 
   <java-symbol type="bool" name="config_watchlistUseFileHashesCache" />
-  <java-symbol type="string" name="config_defaultContextualSearchPackageName" id="0x01040220" />
-  <java-symbol type="string" name="config_defaultContextualSearchKey" id="0x0104021e" />
-  <java-symbol type="string" name="config_defaultContextualSearchEnabled" id="0x104021d" />
-  <java-symbol type="string" name="config_defaultContextualSearchLegacyEnabled" id="0x0104021f" />
+  <java-symbol type="string" name="config_defaultContextualSearchPackageName" id="0x01040226" />
+  <java-symbol type="string" name="config_defaultContextualSearchKey" id="0x01040224" />
+  <java-symbol type="string" name="config_defaultContextualSearchEnabled" id="0x01040223" />
+  <java-symbol type="string" name="config_defaultContextualSearchLegacyEnabled" id="0x01040225" />
 
   <java-symbol type="string" name="unarchival_session_app_label" />
 
