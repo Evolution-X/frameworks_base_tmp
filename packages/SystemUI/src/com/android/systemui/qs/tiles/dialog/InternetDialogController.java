@@ -1050,7 +1050,7 @@ public class InternetDialogController implements AccessPointController.AccessPoi
     }
 
     public boolean isDeviceLocked() {
-        return !mKeyguardStateController.isUnlocked();
+        return false;
     }
 
     boolean activeNetworkIsCellular() {
