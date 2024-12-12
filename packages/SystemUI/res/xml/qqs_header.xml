@@ -22,6 +22,20 @@
 >
 
     <Constraint
+        android:id="@+id/custom_clock">
+        <Layout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/large_screen_shade_header_min_height"
+            app:layout_constraintStart_toStartOf="@id/begin_guide"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
+            app:layout_constraintEnd_toStartOf="@id/date"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+        />
+    </Constraint>
+
+    <Constraint
         android:id="@+id/clock">
         <Layout
             android:layout_width="wrap_content"
