@@ -48,6 +48,9 @@
     <color name="language_picker_item_selected_bg">#92B3F2</color>
     <color name="language_picker_item_selected_stroke">#185ABC</color>
 
+    <!-- Accent TwoTone notification color-->
+    <color name="qs_color_inactive">@color/system_neutral2_800</color>
+
     <!-- Color for side fps toast dark theme-->
     <color name="side_fps_toast_background">#2E3132</color>
     <color name="side_fps_text_color">#EFF1F2</color>
