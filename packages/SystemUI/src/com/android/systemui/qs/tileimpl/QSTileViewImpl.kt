@@ -783,7 +783,7 @@ constructor(
             initializeLongPressProperties(measuredHeight, measuredWidth)
         } else {
             // Long-press effects might have been enabled before but the new state does not
-            // handle a long-press. In this case, we go back to the behaviour of a regular tile
+            // handle a long-press. In this case, we go back to the behavior of a regular tile
             // and clean-up the resources
             showRippleEffect = isClickable
             initialLongPressProperties = null
