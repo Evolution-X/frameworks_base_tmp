@@ -119,6 +119,17 @@
         android:foreground="@drawable/keyguard_bottom_affordance_selected_border"
         android:visibility="invisible" />
 
+    <LinearLayout
+        android:id="@+id/now_bar_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+            <com.android.keyguard.NowBarHolder
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <include
         android:id="@+id/keyguard_settings_button"
         layout="@layout/keyguard_settings_popup_menu"

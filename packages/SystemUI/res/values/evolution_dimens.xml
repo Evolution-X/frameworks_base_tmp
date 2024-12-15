@@ -170,4 +170,11 @@
     <dimen name="peek_notification_icon_padding">16dp</dimen>
     <dimen name="peek_display_area_margin_top">64dp</dimen>
     <dimen name="peek_notification_card_height">132dp</dimen>
+
+    <!-- Now bar -->
+    <dimen name="nowbar_album_art_size">48dp</dimen>
+    <dimen name="nowbar_media_buttons_size">28dp</dimen>
+    <dimen name="nowbar_height">72dp</dimen>
+    <dimen name="nowbar_width">260dp</dimen>
+    <dimen name="nowbar_margin_bottom">18dp</dimen>
 </resources>

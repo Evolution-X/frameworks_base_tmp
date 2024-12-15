@@ -1268,6 +1268,9 @@ public class KeyguardIndicationController {
                     : R.string.keyguard_plugged_in;
         }
 
+        boolean nowBarEnabled = Settings.System.getIntForUser(mContext.getContentResolver(),
+            "keyguard_now_bar_enabled", 0, UserHandle.USER_CURRENT) == 1;
+
         String batteryInfo = "";
         boolean showBatteryInfo = Settings.System.getIntForUser(mContext.getContentResolver(),
             Settings.System.LOCKSCREEN_BATTERY_INFO, 1, UserHandle.USER_CURRENT) == 1;
@@ -1301,6 +1304,10 @@ public class KeyguardIndicationController {
             chargingText = mContext.getResources().getString(chargingId, chargingTimeFormatted, percentage);
         } else {
             chargingText =  mContext.getResources().getString(chargingId, percentage);
+        }
+
+        if (nowBarEnabled) {
+            return percentage;
         }
 
         return batteryInfo.isEmpty() ? chargingText : chargingText + "\n" + batteryInfo;

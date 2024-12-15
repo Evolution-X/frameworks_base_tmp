@@ -177,4 +177,8 @@
     <string name="omnijaws_service_error">Error loading weather data</string>
     <string name="omnijaws_service_unknown">No weather data</string>
     <string name="omnijaws_label_default">Weather</string>
+
+    <!-- Now bar -->
+    <string name="nowbar_no_media">No media playing</string>
+    <string name="nowbar_unknown_title">Unknown title</string>
 </resources>

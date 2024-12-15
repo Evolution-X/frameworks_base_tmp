@@ -60,6 +60,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController
 import com.android.systemui.statusbar.policy.KeyguardStateController
 import com.android.systemui.statusbar.policy.SplitShadeStateController
 import com.android.systemui.util.animation.UniqueObjectHostView
+import com.android.systemui.util.settings.SystemSettings
 import com.android.systemui.util.settings.SecureSettings
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -116,6 +117,7 @@ constructor(
     wakefulnessLifecycle: WakefulnessLifecycle,
     shadeInteractor: ShadeInteractor,
     private val secureSettings: SecureSettings,
+    private val systemSettings: SystemSettings,
     @Main private val handler: Handler,
     @Application private val coroutineScope: CoroutineScope,
     private val splitShadeStateController: SplitShadeStateController,
@@ -128,6 +130,8 @@ constructor(
         secureSettings.getUriFor(Settings.Secure.MEDIA_CONTROLS_LOCK_SCREEN)
     private val peekDisplayUri =
         systemSettings.getUriFor("peek_display_expanded")
+    private val nowBarUri =
+        systemSettings.getUriFor("keyguard_now_bar_enabled")
 
     /**
      * Whether we "skip" QQS during panel expansion.
@@ -631,7 +635,12 @@ constructor(
         val settingsObserver: ContentObserver =
             object : ContentObserver(handler) {
                 override fun onChange(selfChange: Boolean, uri: Uri?) {
-                    if (uri == lockScreenMediaPlayerUri || uri == peekDisplayUri) {
+                    if (uri == lockScreenMediaPlayerUri || uri == nowBarUri || uri == peekDisplayUri) {
+                        val isNowBarEnabled = systemSettings.getBoolForUser(
+                                "keyguard_now_bar_enabled",
+                                false,
+                                UserHandle.USER_CURRENT
+                            )
                         val isPeekDisplayExpanded = systemSettings.getBoolForUser(
                                 "peek_display_expanded",
                                 false,
@@ -642,12 +651,17 @@ constructor(
                                 true,
                                 UserHandle.USER_CURRENT
                             )
-                        allowMediaPlayerOnLockScreen = lsControlsEnabled && !isPeekDisplayExpanded
+                        allowMediaPlayerOnLockScreen = lsControlsEnabled && !isPeekDisplayExpanded && !isNowBarEnabled
                     }
                 }
             }
         secureSettings.registerContentObserverForUserSync(
             Settings.Secure.MEDIA_CONTROLS_LOCK_SCREEN,
+            settingsObserver,
+            UserHandle.USER_ALL
+        )
+        systemSettings.registerContentObserverForUserSync(
+            "keyguard_now_bar_enabled",
             settingsObserver,
             UserHandle.USER_ALL
         )
