@@ -390,7 +390,6 @@ public class BackupTransportClient {
                     TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException
                  | CancellationException e) {
-            Slog.w(TAG, "Failed to get result from transport:", e);
             return null;
         } finally {
             mTransportFutures.remove(future);
