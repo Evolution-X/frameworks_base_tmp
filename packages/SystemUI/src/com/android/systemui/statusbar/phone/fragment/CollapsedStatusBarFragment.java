@@ -29,6 +29,7 @@ import android.telephony.SubscriptionManager;
 import android.util.ArrayMap;
 import android.util.IndentingPrintWriter;
 import android.util.SparseArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -876,6 +877,12 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
      */
     private void animateHiddenState(final View v, int state, boolean animate) {
         StatusBarSimpleFragment.assertInLegacyMode();
+
+        if (v == null) {
+            Log.e("CollapsedStatusBarFragment", "animateHiddenState: View is null");
+            return;
+        }
+
         v.animate().cancel();
         if (!animate || !mAnimationsEnabled) {
             v.setAlpha(0f);
