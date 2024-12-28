@@ -71,12 +71,6 @@ object DebugLogger {
         error: Throwable? = null,
         message: () -> String,
     ) {
-        if (enabled) {
-            if (error == null) {
-                Log.println(priority, tag, message())
-            } else {
-                Log.printlns(LOG_ID_MAIN, priority, tag, message(), error)
-            }
-        }
+        // no-op.
     }
 }
