@@ -2791,8 +2791,6 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
             }
 
             DejankUtils.stopDetectingBlockingIpcs(tag);
-            mMediaArtUtils.updateMediaArtVisibility();
-            mWallpaperDepthUtils.updateDepthWallpaperVisibility();
             if (Settings.System.getIntForUser(mContext.getContentResolver(),
                                               Settings.System.ARCANE_IDLE_MANAGER, 1,
                                               mLockscreenUserManager.getCurrentUserId()) == 1) {
@@ -2871,6 +2869,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
                 }
             });
             DejankUtils.stopDetectingBlockingIpcs(tag);
+            com.android.systemui.util.ScrimUtils.getInstance(mContext).onScreenStateChange();
             if (Settings.System.getIntForUser(mContext.getContentResolver(),
                                               Settings.System.ARCANE_IDLE_MANAGER, 1,
                                               mLockscreenUserManager.getCurrentUserId()) == 1) {

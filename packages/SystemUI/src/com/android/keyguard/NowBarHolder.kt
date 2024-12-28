@@ -70,14 +70,13 @@ class NowBarHolder @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        mController.setNowBarHolder(this)
-        mController.registerListeners()
+        mController.addNowBarHolder(this)
         mMediaSessionManagerHelper.addMediaMetadataListener(this)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        mController.unregisterListeners()
+        mController.removeNowBarHolder(this)
         context.unregisterReceiver(batteryReceiver)
         mMediaSessionManagerHelper.removeMediaMetadataListener(this)
     }

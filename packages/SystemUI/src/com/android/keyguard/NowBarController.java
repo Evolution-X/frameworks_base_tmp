@@ -23,26 +23,35 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.view.View;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public class NowBarController {
     private static NowBarController instance;
 
     private final Context context;
     private final ContentResolver contentResolver;
-    private View mView;
+    private final Set<View> mViews = Collections.synchronizedSet(new HashSet<>());
     
-    private boolean mEnabled;
+    private boolean mEnabled = false;
 
     private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
-            @Override
-            public void onChange(boolean selfChange) {
-                updateVisibility();
-            }
-        };
-        
+        @Override
+        public void onChange(boolean selfChange) {
+            updateVisibility();
+        }
+    };
 
     private NowBarController(Context context) {
         this.context = context.getApplicationContext();
         this.contentResolver = context.getContentResolver();
+        mEnabled = Settings.System.getIntForUser(
+            contentResolver,
+            "keyguard_now_bar_enabled",
+            0,
+            UserHandle.USER_CURRENT
+        ) != 0;
     }
 
     public static synchronized NowBarController getInstance(Context context) {
@@ -52,19 +61,34 @@ public class NowBarController {
         return instance;
     }
 
-    public void setNowBarHolder(View view) {
-        this.mView = view;
-        updateVisibility();
+    public void addNowBarHolder(View view) {
+        if (view == null) return;
+        boolean wasEmpty = mViews.isEmpty();
+        mViews.add(view);
+        if (wasEmpty) {
+            registerListeners();
+        }
+        updateVisibility(view);
+    }
+
+    public void removeNowBarHolder(View view) {
+        if (view == null) return;
+        mViews.remove(view);
+        if (mViews.isEmpty()) {
+            unregisterListeners();
+        }
     }
 
     public void show() {
-        if (mView == null || !mEnabled) return;
-        mView.setVisibility(View.VISIBLE);
+        if (!mEnabled) return;
+        for (View view : mViews) {
+            view.post(() -> view.setVisibility(View.VISIBLE));
+        }
     }
 
     public void hide() {
-        if (mView != null) {
-            mView.setVisibility(View.GONE);
+        for (View view : mViews) {
+            view.post(() -> view.setVisibility(View.GONE));
         }
     }
 
@@ -75,12 +99,17 @@ public class NowBarController {
             0,
             UserHandle.USER_CURRENT
         ) != 0;
-        if (mView != null) {
-            mView.setVisibility(mEnabled ? View.VISIBLE : View.GONE);
+        for (View view : mViews) {
+            updateVisibility(view);
         }
     }
 
-    public void registerListeners() {
+    private void updateVisibility(View view) {
+        if (view == null) return;
+        view.post(() -> view.setVisibility(mEnabled ? View.VISIBLE : View.GONE));
+    }
+
+    private void registerListeners() {
         contentResolver.registerContentObserver(
             Settings.System.getUriFor("keyguard_now_bar_enabled"),
             false,
@@ -90,7 +119,15 @@ public class NowBarController {
         updateVisibility();
     }
 
-    public void unregisterListeners() {
+    private void unregisterListeners() {
         contentResolver.unregisterContentObserver(contentObserver);
+    }
+
+    public void setAlpha(float alpha) {
+        for (View view : mViews) {
+            if (view != null) {
+                view.post(() -> view.setAlpha(alpha));
+            }
+        }
     }
 }

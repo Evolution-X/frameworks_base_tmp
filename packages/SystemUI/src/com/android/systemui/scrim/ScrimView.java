@@ -41,6 +41,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.systemui.shade.TouchLogger;
 import com.android.systemui.util.LargeScreenUtils;
+import com.android.systemui.util.ScrimUtils;
 
 import java.util.concurrent.Executor;
 
@@ -294,6 +295,18 @@ public class ScrimView extends View {
                 mViewAlpha = alpha;
 
                 mDrawable.setAlpha((int) (255 * alpha));
+                if (mScrimName != null && mScrimName.equals("notifications_scrim")) {
+                    ScrimUtils scrimUtils = ScrimUtils.getInstance(getContext());
+                    float scrimBehindAlphaKeyguard = scrimUtils.getScrimBehindAlphaKeyguard();
+                    float notifAlpha = alpha;
+                    if (notifAlpha < scrimBehindAlphaKeyguard) {
+                        notifAlpha = 0;
+                    }
+                    float subjectAlpha = (notifAlpha > scrimBehindAlphaKeyguard)
+                        ? (1f - notifAlpha) / (1f - scrimBehindAlphaKeyguard)
+                        : 1f;
+                    scrimUtils.setViewAlpha(subjectAlpha);
+                }
             }
         });
     }
