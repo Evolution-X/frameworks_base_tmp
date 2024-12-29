@@ -550,12 +550,45 @@ constructor(
 
     private fun setUpClock(previewContext: Context, parentView: ViewGroup) {
         val resources = parentView.resources
+        val clockStyle = secureSettings.getInt(
+            "clock_style",
+            0 
+        )
+        if (clockStyle != 0) {
+            val clockStyleLayout = LayoutInflater.from(previewContext).inflate(
+                R.layout.keyguard_clock_style, parentView, false
+            ) as com.android.systemui.clocks.ClockStyle
+
+            val customClockHostView = FrameLayout(previewContext)
+            customClockHostView.layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+
+            customClockHostView.addView(clockStyleLayout)
+
+            val customClockHostViewLayoutParams = clockStyleLayout.layoutParams as FrameLayout.LayoutParams
+            customClockHostViewLayoutParams.topMargin = SystemBarUtils.getStatusBarHeight(previewContext) +
+                resources.getDimensionPixelSize(com.android.systemui.customization.R.dimen.small_clock_padding_top)
+            clockStyleLayout.layoutParams = customClockHostViewLayoutParams
+            
+            parentView.addView(customClockHostView)
+
+            val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                clockStyleLayout.onTimeChanged()
+            }
+            parentView.addOnLayoutChangeListener(layoutChangeListener)
+
+            disposables += DisposableHandle {
+                parentView.removeOnLayoutChangeListener(layoutChangeListener)
+            }
+        }
         if (!MigrateClocksToBlueprint.isEnabled) {
             largeClockHostView = FrameLayout(previewContext)
             largeClockHostView.layoutParams =
                 FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    if (clockStyle != 0) 0 else FrameLayout.LayoutParams.MATCH_PARENT,
+                    if (clockStyle != 0) 0 else FrameLayout.LayoutParams.MATCH_PARENT
                 )
             largeClockHostView.isInvisible = true
             parentView.addView(largeClockHostView)
@@ -563,10 +596,8 @@ constructor(
             smallClockHostView = FrameLayout(previewContext)
             val layoutParams =
                 FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    resources.getDimensionPixelSize(
-                        com.android.systemui.customization.R.dimen.small_clock_height
-                    )
+                        if (clockStyle != 0) 0 else FrameLayout.LayoutParams.WRAP_CONTENT,
+                        if (clockStyle != 0) 0 else resources.getDimensionPixelSize(com.android.systemui.customization.R.dimen.small_clock_height)
                 )
             layoutParams.topMargin =
                 SystemBarUtils.getStatusBarHeight(previewContext) +
