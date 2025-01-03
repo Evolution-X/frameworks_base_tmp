@@ -4321,7 +4321,7 @@
 
   <!-- Display White-Balance -->
   <java-symbol type="integer" name="config_displayWhiteBalanceBrightnessSensorRate" />
-  <java-symbol type="integer" name="config_displayWhiteBalanceBrightnessFilterHorizon" id="0x010e006a" />
+  <java-symbol type="integer" name="config_displayWhiteBalanceBrightnessFilterHorizon" id="0x010e006b" />
   <java-symbol type="dimen" name="config_displayWhiteBalanceBrightnessFilterIntercept" id="0x010500cd" />
   <java-symbol type="string" name="config_displayWhiteBalanceColorTemperatureSensorName" />
   <java-symbol type="integer" name="config_displayWhiteBalanceColorTemperatureSensorRate" />
