@@ -57,6 +57,11 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content" />
 
+      <include layout="@layout/keyguard_weather"
+               android:id="@+id/keyguard_weather"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content" />
+
       <include 
         android:id="@+id/clock_ls"
         android:layout_width="match_parent"
