@@ -113,6 +113,7 @@ open class VerticalSlider(context: Context, attrs: AttributeSet? = null) : CardV
                         if (isLongPress(event, deltaX, deltaY)) {
                             isLongPressDetected = true
                             doLongPressAction()
+                            return@setOnTouchListener true
                         } else {
                             cancelLongPressDetection()
                             val progressDelta = ((lastY - event.y) * 100 / measuredHeight.toFloat()).toInt()
@@ -290,10 +291,17 @@ open class VerticalSlider(context: Context, attrs: AttributeSet? = null) : CardV
     protected open fun updateProgressRect() {
         val calculatedProgress = progress / 100f
         val newTop = (1 - calculatedProgress) * measuredHeight
-        if (abs(newTop - progressRect.top) > measuredHeight * threshold) {
-            progressRect.top = newTop
+        val progressDelta = newTop - progressRect.top
+        val smoothingFactor = when {
+            progress < 10 || progress > 90 -> 0.05f
+            else -> 0.1f
+        }
+        if (abs(progressDelta) > measuredHeight * threshold) {
+            progressRect.top += progressDelta * smoothingFactor
+            postInvalidateOnAnimation()
         } else {
-            progressRect.top += (newTop - progressRect.top) * 0.1f
+            progressRect.top = newTop
+            invalidate()
         }
         invalidate()
     }
