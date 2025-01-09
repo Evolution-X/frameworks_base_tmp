@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -64,6 +65,8 @@ public class QSPanel extends LinearLayout implements Tunable {
             "lineagesecure:" + LineageSettings.Secure.QS_SHOW_BRIGHTNESS_SLIDER;
     public static final String QS_BRIGHTNESS_SLIDER_POSITION =
             "lineagesecure:" + LineageSettings.Secure.QS_BRIGHTNESS_SLIDER_POSITION;
+    public static final String QS_SHOW_BRIGHTNESS_PERCENTAGE =
+            "lineagesecure:" + LineageSettings.Secure.QS_SHOW_BRIGHTNESS_PERCENTAGE;
     public static final String QS_TILE_VERTICAL_LAYOUT =
             "system:" + Settings.System.QS_TILE_VERTICAL_LAYOUT;
     public static final String QS_TILE_LABEL_HIDE =
@@ -99,6 +102,7 @@ public class QSPanel extends LinearLayout implements Tunable {
     @Nullable
     protected View mBrightnessView;
     protected View mAutoBrightnessView;
+    protected TextView mPercentageView;
 
     @Nullable
     protected BrightnessSliderController mToggleSliderController;
@@ -248,6 +252,7 @@ public class QSPanel extends LinearLayout implements Tunable {
         }
         mBrightnessView = view;
         mAutoBrightnessView = view.findViewById(R.id.brightness_icon);
+        mPercentageView = view.findViewById(R.id.brightness_percentage);
         setBrightnessViewMargin(mTop);
         if (mBrightnessView != null) {
             addView(mBrightnessView);
@@ -415,6 +420,12 @@ public class QSPanel extends LinearLayout implements Tunable {
                 if (mAutoBrightnessView != null) {
                     mAutoBrightnessView.setVisibility(mIsAutomaticBrightnessAvailable &&
                             TunerService.parseIntegerSwitch(newValue, true) ? View.VISIBLE : View.GONE);
+                }
+                break;
+            case QS_SHOW_BRIGHTNESS_PERCENTAGE:
+                if (mPercentageView != null) {
+                    mPercentageView.setVisibility(
+                            TunerService.parseIntegerSwitch(newValue, false) ? View.VISIBLE : View.GONE);
                 }
                 break;
             case QS_LAYOUT_COLUMNS:
