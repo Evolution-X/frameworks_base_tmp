@@ -19,7 +19,10 @@
     android:height="24dp"
     android:viewportWidth="26"
     android:viewportHeight="24">
-    <path
-        android:fillColor="@android:color/white"
-        android:pathData="M0.4,19.79L0.4,19l3.76,-5.39h1v5.21L6.27,18.82v1L5.18,19.82v1.79L4,21.61L4,19.79ZM1.69,18.79L4,18.79v-3.2Z"/>
+    <group
+        android:translateX="19.0" >
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M0.4,19.79L0.4,19l3.76,-5.39h1v5.21L6.27,18.82v1L5.18,19.82v1.79L4,21.61L4,19.79ZM1.69,18.79L4,18.79v-3.2Z"/>
+    </group>
 </vector>
