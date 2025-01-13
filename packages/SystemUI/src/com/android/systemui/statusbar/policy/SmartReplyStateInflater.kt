@@ -200,8 +200,7 @@ interface SmartReplyStateInflater {
         // Only use smart replies from the app if they target P or above. We have this check because
         // the smart reply API has been used for other things (Wearables) in the past. The API to
         // add smart actions is new in Q so it doesn't require a target-sdk check.
-        val enableAppGeneratedSmartReplies = (!constants.requiresTargetingP() ||
-                entry.targetSdk >= Build.VERSION_CODES.P)
+        val enableAppGeneratedSmartReplies = true
         val appGeneratedSmartActions = notification.contextualActions
 
         var smartReplies: SmartReplies? = when {
