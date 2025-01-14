@@ -329,7 +329,16 @@ public class ImageWallpaper extends WallpaperService {
                     int blurType = SystemProperties.getInt("persist.sys.wallpaper.blur_enabled", 0);
                     // allow for both home and ls wallpaper, lockscreen only, home only
                     if (blurType == 1 || (blurType == 2 && isLockScreenWallpaper()) || (blurType == 3 && !isLockScreenWallpaper())) {
-                        bitmap = WallpaperUtils.getBlurredBitmap(bitmap, blurType, 25, getDisplayContext());
+                        int userBlurRadius;
+                        switch (blurType) {
+                            case 1: // Frosted glass
+                                userBlurRadius = 200;
+                                break;
+                            default: // Glass
+                                userBlurRadius = 25;
+                                break;
+                        }
+                        bitmap = WallpaperUtils.getBlurredBitmap(bitmap, userBlurRadius, getDisplayContext());
                     }
                     // allow for both home and ls wallpaper, lockscreen only, home only
                     int dimType = SystemProperties.getInt("persist.sys.wallpaper.dim_enabled", 0);

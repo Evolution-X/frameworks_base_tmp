@@ -68,7 +68,7 @@ public class WallpaperUtils {
         return dimmedBitmap;
     }
 
-    public static Bitmap getBlurredBitmap(Bitmap bitmap, int blurType, int radius, Context context) {
+    public static Bitmap getBlurredBitmap(Bitmap bitmap, int radius, Context context) {
         RenderScript rs = RenderScript.create(context);
         float scaleFactor = 0.25f;
         int scaledWidth = Math.round(bitmap.getWidth() * scaleFactor);
