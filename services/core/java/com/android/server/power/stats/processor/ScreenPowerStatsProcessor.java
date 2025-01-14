@@ -89,7 +89,6 @@ class ScreenPowerStatsProcessor extends PowerStatsProcessor {
             return true;
         }
 
-        mLastUsedDescriptor = descriptor;
         mStatsLayout = new ScreenPowerStatsLayout(descriptor);
         if (mStatsLayout.getDisplayCount() != mDisplayCount) {
             Slog.e(TAG, "Incompatible number of displays: " + mStatsLayout.getDisplayCount()
@@ -97,6 +96,7 @@ class ScreenPowerStatsProcessor extends PowerStatsProcessor {
             return false;
         }
 
+        mLastUsedDescriptor = descriptor;
         mTmpDeviceStatsArray = new long[descriptor.statsArrayLength];
         mTmpUidStatsArray = new long[descriptor.uidStatsArrayLength];
         return true;
