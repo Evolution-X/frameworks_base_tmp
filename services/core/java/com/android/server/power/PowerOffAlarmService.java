@@ -59,16 +59,16 @@ public class PowerOffAlarmService extends SystemService {
     private static final int NOTIFICATION_ID = 0;
 
     private final Context mContext;
-    private final AlarmManager mAlarmManager;
+    private AlarmManager mAlarmManager;
     private NotificationManager mNotificationManager;
     private Notification mNotification;
     private SharedPreferences mSharedPreferences;
     private boolean mIsAvailable = false;
+    private boolean mSystemReady = false;
 
     public PowerOffAlarmService(Context context) {
         super(context);
         mContext = context;
-        mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
     }
 
     @Override
@@ -100,7 +100,9 @@ public class PowerOffAlarmService extends SystemService {
         if (phase != SystemService.PHASE_BOOT_COMPLETED || !mIsAvailable)
             return;
         Slog.v(TAG, "onBootPhase PHASE_BOOT_COMPLETED");
+        mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mSystemReady = true;
         setupNotification();
         updateAlarms(mAlarmManager);
     }
@@ -108,6 +110,9 @@ public class PowerOffAlarmService extends SystemService {
     private final BroadcastReceiver mAlarmChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mSystemReady) {
+                return;
+            }
             Slog.v(TAG, "mAlarmChangedReceiver onReceive");
             updateAlarms(mAlarmManager, true);
         }
@@ -161,6 +166,9 @@ public class PowerOffAlarmService extends SystemService {
     }
 
     private synchronized void updateNotification(boolean isSet) {
+        if (!mSystemReady) {
+            return;
+        }
         if (mNotificationManager == null) {
             Slog.e(TAG, "updateNotification: mNotificationManager is null!");
             return;
@@ -175,6 +183,9 @@ public class PowerOffAlarmService extends SystemService {
     }
 
     private void setupNotification() {
+        if (!mSystemReady) {
+            return;
+        }
         final Intent intent = (new Intent(ACTION_SHOW_ALARMS))
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         final PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent,
