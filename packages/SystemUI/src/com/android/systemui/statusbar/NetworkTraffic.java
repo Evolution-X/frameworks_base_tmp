@@ -357,6 +357,9 @@ public class NetworkTraffic extends TextView implements TunerService.Tunable,
             return;
         }
         newTint = DarkIconDispatcher.getTint(areas, this, tint);
+        if (DarkIconDispatcher.isInAreas(areas, this)) {
+            newTint = DarkIconDispatcher.getInverseTint(areas, this, tint);
+        }
         checkUpdateTrafficDrawable();
     }
 
