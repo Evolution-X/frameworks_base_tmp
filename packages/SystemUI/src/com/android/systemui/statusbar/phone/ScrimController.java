@@ -389,13 +389,20 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
         mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
         configurationController.addCallback(new ConfigurationController.ConfigurationListener() {
             @Override
+            public void onDensityOrFontScaleChanged() {
+                updateNotificationScrimVisibility();
+            }
+
+            @Override
             public void onThemeChanged() {
                 ScrimController.this.onThemeChanged();
+                updateNotificationScrimVisibility();
             }
 
             @Override
             public void onUiModeChanged() {
                 ScrimController.this.onThemeChanged();
+                updateNotificationScrimVisibility();
             }
 
             @Override
