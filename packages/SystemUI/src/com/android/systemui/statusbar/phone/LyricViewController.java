@@ -209,8 +209,11 @@ public abstract class LyricViewController implements
     }
 
     @Override
-    public void onDarkChanged(ArrayList<Rect> area, float darkIntensity, int tint) {
-        int tintColor = DarkIconDispatcher.getTint(area, mLyricContainer, tint);
+    public void onDarkChanged(ArrayList<Rect> areas, float darkIntensity, int tint) {
+        int tintColor = DarkIconDispatcher.getTint(areas, mLyricContainer, tint);
+        if (DarkIconDispatcher.isInAreas(areas, mLyricContainer)) {
+            tintColor = DarkIconDispatcher.getInverseTint(areas, mLyricContainer, tint);
+        }
 
         ((TextView) mTextSwitcher.getCurrentView()).setTextColor(tintColor);
         ((TextView) mTextSwitcher.getNextView()).setTextColor(tintColor);
