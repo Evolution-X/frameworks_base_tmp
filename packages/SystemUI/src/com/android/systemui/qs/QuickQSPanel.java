@@ -102,7 +102,9 @@ public class QuickQSPanel extends QSPanel implements TunerService.Tunable {
 
     @Override
     protected boolean mediaNeedsTopMargin() {
-        return !TileUtils.isCompactQSMediaPlayerEnforced(mContext);
+        boolean isA11Style = TileUtils.getQsUiStyle(mContext) != 0;
+        boolean isCompactPlayerEnabled = TileUtils.isCompactQSMediaPlayerEnforced(mContext);
+        return !isCompactPlayerEnabled || isCompactPlayerEnabled && !isA11Style;
     }
 
     @Override
