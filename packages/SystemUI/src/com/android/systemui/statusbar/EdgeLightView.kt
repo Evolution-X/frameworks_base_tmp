@@ -40,6 +40,8 @@ class EdgeLightView @JvmOverloads constructor(
         style = Paint.Style.STROKE
         strokeWidth = 20f
         isAntiAlias = true
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
     }
 
     private var animating = false
