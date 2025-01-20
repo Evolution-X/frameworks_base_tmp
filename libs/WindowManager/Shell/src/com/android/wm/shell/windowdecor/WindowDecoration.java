@@ -440,14 +440,7 @@ public abstract class WindowDecoration<T extends View & TaskFocusStateConsumer>
                     .setPosition(mTaskSurface, taskPosition.x, taskPosition.y);
         }
 
-        float shadowRadius;
-        if (mTaskInfo.getWindowingMode() == WINDOWING_MODE_FULLSCREEN) {
-            // Shadow is not needed for fullscreen tasks
-            shadowRadius = 0;
-        } else {
-            shadowRadius =
-                    loadDimension(mDecorWindowContext.getResources(), params.mShadowRadiusId);
-        }
+        float shadowRadius = 0;
         startT.setShadowRadius(mTaskSurface, shadowRadius).show(mTaskSurface);
         finishT.setShadowRadius(mTaskSurface, shadowRadius);
 
