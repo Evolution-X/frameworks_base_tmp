@@ -397,6 +397,10 @@ public class WindowConfiguration implements Parcelable, Comparable<WindowConfigu
 
     public void setWindowingMode(@WindowingMode int windowingMode) {
         mWindowingMode = windowingMode;
+        // Automatically set always-on-top for freeform windows
+        if (windowingMode == WINDOWING_MODE_FREEFORM) {
+            setAlwaysOnTop(true);
+        }
     }
 
     @WindowingMode
