@@ -2620,10 +2620,6 @@ public class ComputerEngine implements Computer {
                 || isCallerHome(callingUid, userId)) {
             return false;
         }
-        // if the target is hidden app, do filter
-        if (ps.getUserStateOrDefault(userId).isHidden()) {
-            return true;
-        }
         // if the target is included in Settings.Secure.HIDE_APPLIST, do filter
         if (com.android.internal.util.evolution.HideAppListUtils.shouldHideAppList(
                 mContext, packageName)) {
