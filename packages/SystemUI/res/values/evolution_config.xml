@@ -20,4 +20,7 @@
 
     <!-- Notification counter -->
     <integer name="status_bar_notification_info_maxnum">999</integer>
+
+    <!-- Show 5G toggle in internet dialog when available -->
+    <bool name="config_supportsVONR">true</bool>
 </resources>
