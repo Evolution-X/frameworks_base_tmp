@@ -29,6 +29,8 @@ import android.view.animation.LinearInterpolator
 import android.animation.AnimatorListenerAdapter
 import android.animation.Animator
 
+import com.android.internal.policy.ScreenDecorationsUtils
+
 class EdgeLightView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -175,13 +177,14 @@ class EdgeLightView @JvmOverloads constructor(
     }
 
     private fun drawFullEdgeLight(canvas: Canvas) {
-        for (i in pathSegments.indices step 4) {
-            val x1 = pathSegments[i]
-            val y1 = pathSegments[i + 1]
-            val x2 = pathSegments[i + 2]
-            val y2 = pathSegments[i + 3]
-            canvas.drawLine(x1, y1, x2, y2, edgeLightPaint)
-        }
+        val cornerRadius = ScreenDecorationsUtils.getWindowCornerRadius(context).toFloat()
+        val rect = android.graphics.RectF(
+            edgeLightPaint.strokeWidth / 2,
+            edgeLightPaint.strokeWidth / 2,
+            width - edgeLightPaint.strokeWidth / 2,
+            height - edgeLightPaint.strokeWidth / 2
+        )
+        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, edgeLightPaint)
     }
 
     private fun drawEdgeLight(canvas: Canvas) {
