@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,11 +37,13 @@ public class NowBarController {
     private final Set<View> mViews = Collections.synchronizedSet(new HashSet<>());
     
     private boolean mEnabled = false;
+    private int mMarginBottom = 18;
 
     private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
             updateVisibility();
+            updateMarginBottom();
         }
     };
 
@@ -52,6 +56,12 @@ public class NowBarController {
             0,
             UserHandle.USER_CURRENT
         ) != 0;
+        mMarginBottom = Settings.System.getIntForUser(
+            contentResolver,
+            "nowbar_margin_bottom",
+            18,
+            UserHandle.USER_CURRENT
+        );
     }
 
     public static synchronized NowBarController getInstance(Context context) {
@@ -69,6 +79,7 @@ public class NowBarController {
             registerListeners();
         }
         updateVisibility(view);
+        updateMarginBottom(view);
     }
 
     public void removeNowBarHolder(View view) {
@@ -109,6 +120,34 @@ public class NowBarController {
         view.post(() -> view.setVisibility(mEnabled ? View.VISIBLE : View.GONE));
     }
 
+    private void updateMarginBottom() {
+        mMarginBottom = Settings.System.getIntForUser(
+            contentResolver,
+            "nowbar_margin_bottom",
+            18,
+            UserHandle.USER_CURRENT
+        );
+        for (View view : mViews) {
+            updateMarginBottom(view);
+        }
+    }
+
+    private void updateMarginBottom(View view) {
+        if (view == null) return;
+        view.post(() -> {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            if (params != null) {
+                params.bottomMargin = dpToPx(mMarginBottom);
+                view.setLayoutParams(params);
+            }
+        });
+    }
+
+    private int dpToPx(int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
     private void registerListeners() {
         contentResolver.registerContentObserver(
             Settings.System.getUriFor("keyguard_now_bar_enabled"),
@@ -116,7 +155,14 @@ public class NowBarController {
             contentObserver,
             UserHandle.USER_CURRENT
         );
+        contentResolver.registerContentObserver(
+            Settings.System.getUriFor("nowbar_margin_bottom"),
+            false,
+            contentObserver,
+            UserHandle.USER_CURRENT
+        );
         updateVisibility();
+        updateMarginBottom();
     }
 
     private void unregisterListeners() {
