@@ -327,7 +327,9 @@ public class CentralSurfacesCommandQueueCallbacks implements CommandQueue.Callba
             mMetricsLogger.action(MetricsEvent.ACTION_SYSTEM_NAVIGATION_KEY_DOWN);
             if (mPanelExpansionInteractor.isFullyCollapsed()) {
                 if (mVibrateOnOpening) {
-                    vibrateOnNavigationKeyDown();
+                    int qsHapticsIntensity = android.provider.Settings.System.getInt(mContext.getContentResolver(),
+                            "qs_haptics_intensity", 0);
+                    com.android.internal.util.android.VibrationUtils.triggerVibration(mContext, qsHapticsIntensity);
                 }
                 mShadeController.animateExpandShade();
                 mNotificationStackScrollLayoutController.setWillExpand(true);
